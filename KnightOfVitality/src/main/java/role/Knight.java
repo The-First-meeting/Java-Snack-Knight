@@ -13,6 +13,7 @@ public class Knight implements Runnable{
     public GameFrame gf;
     public int kx;
     public int ky;
+    public boolean isChangeToward;
     public int toward;//上下左右 对应 1234
     public int Tx[] = new int[100];
     public int Ty[] = new int[100];
@@ -25,6 +26,7 @@ public class Knight implements Runnable{
     {
         this.gf=gf;
         this.toward = 2;
+        this.isChangeToward = true;
         //设置骑士的初始位置
         this.gf.add(jknight);
         jknight.setBounds(100,20,20,20);

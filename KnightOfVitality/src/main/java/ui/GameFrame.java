@@ -113,49 +113,6 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
         System.out.println(this.knight.kx+"==================");
         System.out.println(this.knight.ky+"=======================");*/
         timer.start();//时钟启动
-//        while(true)
-//        {
-//            if(this.bullet.bx==this.knight.kx&&Math.abs(this.bullet.by-this.knight.ky)<=20)
-//            {
-//                //System.exit(0);
-//                System.out.println(this.bullet.by+"===="+this.knight.ky);
-//                bullet.stop();
-//                cd.stop();
-//                GameOver go=new GameOver();
-//                go.gameOver();
-//            }
-//            for(int i = 0; i < knight.klenth; i++)
-//            {
-//                if(this.bullet.bx == this.knight.Tx[i] && Math.abs(this.bullet.by - this.knight.Ty[i]) <= 20)
-//                {
-//                    for(int j = i; j < knight.klenth; j++)
-//                    {
-//                        this.knight.jTail[j].setBounds(this.knight.Tx[j],this.knight.Ty[j],0,0);
-//                    }
-//                    this.knight.klenth = i;
-//                }
-//                if(this.knight.Tx[i]==this.knight.kx && this.knight.Ty[i] == this.knight.ky && (this.knight.ky != 20 && this.knight.kx != 100))
-//                {
-//                    //System.exit(0);
-//                    System.out.println(this.knight.Ty[i]+"===="+this.knight.ky);
-//                    bullet.stop();
-//                    cd.stop();
-//                    GameOver go=new GameOver();
-//                    go.gameOver();
-//                }
-//            }
-//            System.out.println(this.bullet.bx+"---3---------------------------");
-//            System.out.println(this.bullet.by+"---4---------------------------");
-//            //System.out.println("--------------");
-//            /*System.out.println(this.knight.kx+"====1==================");
-//            System.out.println(this.knight.ky+"===2=======================");*/
-//            /*
-//            if(this.knight.kx==240&&this.knight.ky==160)
-//            {
-//                System.out.println(this.bullet.bx+"---3---------------------------");
-//                System.out.println(this.bullet.by+"---4---------------------------");
-//            }*/
-//        }
 
     }
 
@@ -230,6 +187,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
         {
             knight.jTail[i].setBounds(knight.Tx[i],knight.Ty[i],20,20);
         }
+        knight.isChangeToward = true;
         //头与子弹碰撞————失败
         if(this.bullet.bx==this.knight.kx&&Math.abs(this.bullet.by-this.knight.ky)<=20)
         {
@@ -280,30 +238,36 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-
-        //转向
-        if(keyCode == e.VK_LEFT){
-            if(knight.toward != 4 && knight.hit.hitCheck(knight.kx,knight.ky,3, this.map))
-            {
-                knight.toward = 3;
+        if(knight.isChangeToward)
+        {
+            //转向
+            if(keyCode == e.VK_LEFT){
+                if(knight.toward != 4 && knight.hit.hitCheck(knight.kx,knight.ky,3, this.map))
+                {
+                    knight.toward = 3;
+                    knight.isChangeToward = false;
+                }
             }
-        }
-        else if(keyCode == e.VK_RIGHT){
-            if(knight.toward != 3 && knight.hit.hitCheck(knight.kx,knight.ky,4, this.map))
-            {
-                knight.toward = 4;
+            else if(keyCode == e.VK_RIGHT){
+                if(knight.toward != 3 && knight.hit.hitCheck(knight.kx,knight.ky,4, this.map))
+                {
+                    knight.toward = 4;
+                    knight.isChangeToward = false;
+                }
             }
-        }
-        else if(keyCode == e.VK_UP){
-            if(knight.toward != 2 && knight.hit.hitCheck(knight.kx,knight.ky,1, this.map))
-            {
-                knight.toward = 1;
+            else if(keyCode == e.VK_UP){
+                if(knight.toward != 2 && knight.hit.hitCheck(knight.kx,knight.ky,1, this.map))
+                {
+                    knight.toward = 1;
+                    knight.isChangeToward = false;
+                }
             }
-        }
-        else if(keyCode == e.VK_DOWN){
-            if(knight.toward != 1 && knight.hit.hitCheck(knight.kx,knight.ky,2, this.map))
-            {
-                knight.toward = 2;
+            else if(keyCode == e.VK_DOWN){
+                if(knight.toward != 1 && knight.hit.hitCheck(knight.kx,knight.ky,2, this.map))
+                {
+                    knight.toward = 2;
+                    knight.isChangeToward = false;
+                }
             }
         }
     }
