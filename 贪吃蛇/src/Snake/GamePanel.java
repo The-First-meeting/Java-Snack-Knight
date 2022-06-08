@@ -6,14 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     //定义蛇的数据结构
+    boolean isChangeToward;
     int length; //蛇的长度
     int[] snakeX = new int [600]; //蛇的X坐标
     int[] snakeY = new int [500]; //蛇的Y坐标
+    int coins = 0;//现有金币数
     String fx; //蛇头的方向
 
     int score; //成绩
@@ -26,13 +29,67 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     //游戏当前的状态： 开始/停止
     boolean isStart; //默认不开始
     boolean isFail;
+    boolean inShop;
     //定时器 以毫秒为单位 1000ms = 1s, 第一个参数为刷新周期
     Timer timer = new Timer(50,this);
+    public static String txt2String(File file){
+        StringBuilder result = new StringBuilder();
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                result.append(s);
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+    public static void writeData(String str, String path) throws IOException {
+        //文件目录
+        File writefile;
+        BufferedWriter bw;
+        writefile = new File(path);
+        boolean append = false;  //  是否追加
+        if (writefile.exists() == false)   // 判断文件是否存在，不存在则生成
+        {
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        } else {        // 存在先删除，再创建
+            writefile.delete();
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        }
+        try {
+            FileWriter fw = new FileWriter(writefile, append);
+            bw = new BufferedWriter(fw);
+            fw.write(str);
+            fw.flush();
+            fw.close();
+
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+    }
     //构造函数
     public GamePanel(){
         this.setVisible(true);
+        isChangeToward = true;
         isStart = false;
         isFail = false;
+        inShop = false;
         init();
         //获得焦点和键盘事件
         this.setFocusable(true); //获得焦点坐标
@@ -70,6 +127,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         g.setFont(new Font("微软雅黑",Font.BOLD,15));
         g.drawString("长度:"+length,750,35);
         g.drawString("分数:"+score,750,50);
+        g.drawString("金币:"+coins,750,65);
         //画食物
         //ImageIcon image=new ImageIcon(Data.food.getImage().getScaledInstance(Data.food.getIconWidth()*power,Data.food.getIconHeight()*power,Image.SCALE_DEFAULT));
         Data.food.paintIcon(this,g,foodX,foodY);
@@ -131,23 +189,43 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             repaint();
         }
+        //首页，进入商店
+        if(keyCode == keyEvent.VK_S && isStart == false){
+            //切换至商店界面
+            inShop = true;
+        }
         //小蛇转向
-        if(keyCode == keyEvent.VK_LEFT){
-            if(fx.equals("R"));
-            else
-            fx = "L";
-        }else if(keyCode == keyEvent.VK_DOWN){
-            if(fx.equals("U"));
-            else
-            fx = "D";
-        }else if(keyCode == keyEvent.VK_UP){
-            if(fx.equals("D"));
-            else
-            fx = "U";
-        }else if(keyCode == keyEvent.VK_RIGHT){
-            if(fx.equals("L"));
-            else
-            fx = "R";
+        if(isStart && isChangeToward)
+        {
+            if(keyCode == keyEvent.VK_LEFT){
+                if(fx.equals("R"));
+                else
+                {
+                    fx = "L";
+                    isChangeToward = false;
+                }
+            }else if(keyCode == keyEvent.VK_DOWN){
+                if(fx.equals("U"));
+                else
+                {
+                    fx = "D";
+                    isChangeToward = false;
+                }
+            }else if(keyCode == keyEvent.VK_UP){
+                if(fx.equals("D"));
+                else
+                {
+                    fx = "U";
+                    isChangeToward = false;
+                }
+            }else if(keyCode == keyEvent.VK_RIGHT){
+                if(fx.equals("L"));
+                else
+                {
+                    fx = "R";
+                    isChangeToward = false;
+                }
+            }
         }
     }
 
@@ -213,14 +291,29 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     //isFail = true;
                 }
             }
+            isChangeToward = true;
             //失败判定
-            for(int i = 1;i<length;i++)
-            {
-                if(snakeX[0]==snakeX[i]&&snakeY[0]==snakeY[i])
+            for(int i = 1;i<length;i++) {
+                if (snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]){
                     isFail = true;
+                    coins += score / 100;
+                    String path = "src\\Snake\\statics\\coins.txt";
+                    try {
+                        writeData(coins + "", path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             repaint(); //重画页面
+        }
+        else if(inShop){
+
+        }
+        else{
+            File file = new File("src\\Snake\\statics\\coins.txt");
+            coins = Integer.parseInt(txt2String(file));
         }
     }
 }
