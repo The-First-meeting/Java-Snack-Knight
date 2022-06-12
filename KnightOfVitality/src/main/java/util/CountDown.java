@@ -1,6 +1,6 @@
 package util;
 
-import ui.GameFrame;
+import ui.GamePanel;
 
 import javax.swing.*;
 
@@ -9,7 +9,7 @@ public class CountDown implements Runnable{
     JLabel titlebox=new JLabel();
     int num=30;
     public boolean flag=true;
-    public void titleBox(GameFrame gf) throws InterruptedException {
+    public void titleBox(GamePanel gf) throws InterruptedException {
 
         gf.add(titlebox);
         titlebox.setBounds(0,0,300,20);

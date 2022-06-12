@@ -1,16 +1,14 @@
 package role;
 
-import ui.GameFrame;
+import ui.Data;
+import ui.GamePanel;
 import util.Hit;
-import util.Winner;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class Knight implements Runnable{
 
-    public GameFrame gf;
+    public GamePanel gp;
     public int kx;
     public int ky;
     public boolean isChangeToward;
@@ -22,13 +20,12 @@ public class Knight implements Runnable{
     public JLabel[] jTail = new JLabel[100];
     public boolean bool;
     public Hit hit=new Hit();
-    public Knight(GameFrame gf)
+    public Knight(GamePanel gp)
     {
-        this.gf=gf;
+        this.gp=gp;
         this.toward = 2;
         this.isChangeToward = true;
         //设置骑士的初始位置
-        this.gf.add(jknight);
         jknight.setBounds(100,20,20,20);
         this.kx=100;
         this.ky=20;
@@ -38,12 +35,18 @@ public class Knight implements Runnable{
             Tx[i] = 100;
             Ty[i] = 20;
         }
-        System.out.println("骑士坐标设置成功");
-        gf.getLayeredPane().add(jknight, Integer.valueOf(Integer.MAX_VALUE));
+
+        this.gp.add(jknight);
         for(int i = 0; i < klenth; i++)
         {
-            gf.getLayeredPane().add(jTail[i], Integer.valueOf(Integer.MAX_VALUE));
+            this.gp.add(jTail[i]);
         }
+        System.out.println("骑士坐标设置成功");
+//        gf.getLayeredPane().add(jknight, Integer.valueOf(Integer.MAX_VALUE));
+//        for(int i = 0; i < klenth; i++)
+//        {
+//            gf.getLayeredPane().add(jTail[i], Integer.valueOf(Integer.MAX_VALUE));
+//        }
         //this.run();
     }
 

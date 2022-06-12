@@ -31,6 +31,8 @@ public class Map {
     public int[][] readMap() throws Exception {
         // 构造文件输入流
         FileInputStream fis = new FileInputStream("./map.txt");
+
+
         InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader br = new BufferedReader(isr);
 

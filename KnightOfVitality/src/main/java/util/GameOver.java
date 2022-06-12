@@ -6,7 +6,6 @@ public class GameOver {
     public void gameOver()
     {
         JOptionPane.showMessageDialog(null, "Game Over", "元气骑士！",JOptionPane.INFORMATION_MESSAGE);
-        System.exit(0);
     }
 
 }
