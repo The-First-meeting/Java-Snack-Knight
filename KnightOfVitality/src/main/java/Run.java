@@ -5,7 +5,7 @@ import javax.swing.*;
 public class Run {
     //主函数，程序入口
     public static void main(String[] args) throws Exception {
-        JFrame frame = new JFrame("贪吃蛇与sbdyy");              //创建一个普通的窗体对象
+        JFrame frame = new JFrame("元气骑士与sbdyy");              //创建一个普通的窗体对象
         frame.setBounds(300,100,900,720);       //设置组件的位置与长宽
 //        frame.setLocation(300,100);                                 //设置组件的显示位置
         frame.setResizable(false);                                    //设置组件大小不可被用户改变

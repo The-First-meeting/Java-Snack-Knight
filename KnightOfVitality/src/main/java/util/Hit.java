@@ -9,44 +9,44 @@ public class Hit {
         switch (direction)
         {
             case 1:
-                if(y>=40&&y<=300)
+                if(y>=50&&y<=375)
                 {
                     //System.out.println("x="+x+"y="+y);//100,20
-                    x=x/20;//5
-                    y=y/20;//1
+                    x=x/25;//5
+                    y=y/25;//1
                     //System.out.println("x="+x+"y="+y);
                     if (y==1||map[y-2][x]==0) return false;
                     else return true;
                 }
                 break;
             case 2:
-                if(y>=20&&y<=280)
+                if(y>=25&&y<=350)
                 {
                     //System.out.println("x="+x+"y="+y);//20,280
-                    x=x/20;//5
-                    y=y/20;//1
+                    x=x/25;//5
+                    y=y/25;//1
                     //System.out.println("x="+x+"y="+y);
                     if (map[y][x]==0) return false;
                     else return true;
                 }
                 break;
             case 3://左
-                if(x>=20&&x<=280)
+                if(x>=25&&x<=350)
                 {
                     //System.out.println("x="+x+"y="+y);//100,20
-                    x=x/20;//5
-                    y=y/20;//1
+                    x=x/25;//5
+                    y=y/25;//1
                     //System.out.println("x="+x+"y="+y);
                     if (map[y-1][x-1]==0) return false;
                     else return true;
                 }
                 break;
             case 4:
-                if(x>=0&&x<=260)
+                if(x>=0&&x<=375)
                 {
                     //System.out.println("x="+x+"y="+y);//40,20
-                    x=x/20;//2
-                    y=y/20;//1
+                    x=x/25;//2
+                    y=y/25;//1
                    // System.out.println("x="+x+"y="+y);
                     if (map[y-1][x+1]==0) return false;
                     else return true;

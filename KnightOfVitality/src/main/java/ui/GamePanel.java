@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
+    public int index;
     public Knight knight;
     Thread nightThread;
     Thread bulletThread;
@@ -24,22 +25,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public Bullet bullet;
     Timer timer = new Timer(300,this);//时钟信息
     public int[][] map = null;//地图信息
-    {
-        // 实例代码块中初始化地图资源的数据
-        Map mp = new Map();
-        try {
-            map = mp.readMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // 实例代码块中初始化地图资源的数据
+    Map mp = new Map();
 
     //构造函数
-    public GamePanel() throws InterruptedException {
+    public GamePanel(){
         this.setLayout(null);
         this.setVisible(true);
         this.setFocusable(true); //获得焦点坐标
         this.addKeyListener(this);
+        index = 0;
         isStart = false;
         isFail = false;
         isWin = false;
@@ -56,6 +51,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         //  cd=new CountDown();
         bullet=new Bullet(this);
         // 读取地图，并配置地图
+        try {
+            map = mp.readMap(index);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < map.length; i++) {
             //System.out.println("map.length="+map.length);
             for (int j = 0; j < map[0].length; j++) {
@@ -63,13 +63,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 if (map[i][j]==1)//1是道路
                 {
                     JLabel j1=new JLabel(new ImageIcon("image/floor.png"));
-                    j1.setBounds(20*j,20*i+20,20,20);
+                    j1.setBounds(25*j,25*i+25,25,25);
                     this.add(j1);
                 }
                 else if(map[i][j]==0)//2是墙壁
                 {
                     JLabel j2=new JLabel(new ImageIcon("image/brick.png"));
-                    j2.setBounds(20*j,20*i+20,20,20);
+                    j2.setBounds(25*j,25*i+25,25,25);
                     this.add(j2);
                 }
                 else
@@ -123,7 +123,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                     knight.Tx[0] = knight.kx;
                     knight.Ty[0] = knight.ky;
-                    knight.ky -= 20;//头前进
+                    knight.ky -= 25;//头前进
                 }
             } else if (knight.toward == 2)//下
             {
@@ -135,7 +135,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                     knight.Tx[0] = knight.kx;
                     knight.Ty[0] = knight.ky;
-                    knight.ky += 20;
+                    knight.ky += 25;
                 }
             } else if (knight.toward == 3)//左
             {
@@ -147,7 +147,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                     knight.Tx[0] = knight.kx;
                     knight.Ty[0] = knight.ky;
-                    knight.kx -= 20;
+                    knight.kx -= 25;
                 }
             } else if (knight.toward == 4)//右
             {
@@ -159,17 +159,17 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                     knight.Tx[0] = knight.kx;
                     knight.Ty[0] = knight.ky;
-                    knight.kx += 20;
+                    knight.kx += 25;
                 }
             }
             //刷新图画
-            knight.jknight.setBounds(knight.kx, knight.ky, 20, 20);
+            knight.jknight.setBounds(knight.kx, knight.ky, 25, 25);
             for (int i = 0; i < knight.klenth; i++) {
-                knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 20, 20);
+                knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 25, 25);
             }
             knight.isChangeToward = true;
             //头与子弹碰撞————失败
-            if (this.bullet.bx == this.knight.kx && Math.abs(this.bullet.by - this.knight.ky) <= 20) {
+            if (this.bullet.bx == this.knight.kx && Math.abs(this.bullet.by - this.knight.ky) <= 25) {
                 System.out.println(this.bullet.by + "====" + this.knight.ky);
                 bullet.stop();
                 isFail = true;
@@ -180,7 +180,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
             for (int i = 0; i < knight.klenth; i++) {
                 //尾巴与子弹碰撞————切断
-                if (this.bullet.bx == this.knight.Tx[i] && Math.abs(this.bullet.by - this.knight.Ty[i]) <= 20) {
+                if (this.bullet.bx == this.knight.Tx[i] && Math.abs(this.bullet.by - this.knight.Ty[i]) <= 25) {
                     for (int j = i; j < knight.klenth; j++) {
                         this.knight.gp.remove(this.knight.jTail[j]);
                     }
@@ -198,13 +198,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
 
             //胜利判断
-            if (knight.kx == 160 && knight.ky == 300 && !isWin) {
+            if (knight.kx == 200 && knight.ky == 375 && !isWin) {
                 //获得胜利
                 isWin = true;
                 Winner winner = new Winner();
                 winner.winner(knight.klenth);
                 bullet.stop();
                 isFail = false;
+                index++;
                 repaint();
             }
         }
@@ -248,8 +249,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             if(keyCode == KeyEvent.VK_SPACE){
                 if(isFail){
                     //重新开始
-                    this.knight.gp.removeAll();
-                    this.bullet.gp.removeAll();
+                    this.removeAll();
                     init();
                     isStart = true;
                     timer.setDelay(300);
@@ -260,8 +260,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     timer.setDelay(300);
                 }
                 else {//游戏胜利
-                    this.knight.gp.removeAll();
-                    this.bullet.gp.removeAll();
+                    this.removeAll();
                     init();
                     isStart = true;
                     timer.setDelay(300);

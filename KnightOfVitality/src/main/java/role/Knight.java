@@ -26,14 +26,14 @@ public class Knight implements Runnable{
         this.toward = 2;
         this.isChangeToward = true;
         //设置骑士的初始位置
-        jknight.setBounds(100,20,20,20);
-        this.kx=100;
-        this.ky=20;
+        jknight.setBounds(125,25,25,25);
+        this.kx=125;
+        this.ky=25;
         for(int i = 0; i < klenth; i++)
         {
             jTail[i] = new JLabel(new ImageIcon("image/knight.png"));
-            Tx[i] = 100;
-            Ty[i] = 20;
+            Tx[i] = 125;
+            Ty[i] = 25;
         }
 
         this.gp.add(jknight);
@@ -55,94 +55,5 @@ public class Knight implements Runnable{
     public void run() {
         this.kx=kx;
         this.ky=ky;
-//        this.gf.addKeyListener(
-//                new KeyAdapter() {
-//                    public void keyPressed(KeyEvent e) {
-
-                        //while(true)
-                        //{
-//                            int keyCode=e.getKeyCode();
-//                            if (keyCode==KeyEvent.VK_UP && toward != 2)
-//                            {
-//                                System.out.println("你按下了上键");
-//                                bool= hit.hitCheck(kx,ky,1, gf.map);
-//                                if(bool)
-//                                {
-//                                    for(int i = klenth - 1; i > 0; i--)
-//                                    {
-//                                        Tx[i] = Tx[i-1];
-//                                        Ty[i] = Ty[i - 1];
-//                                    }
-//                                    Tx[0] = kx;
-//                                    Ty[0] = ky;
-//                                    ky-=20;
-//                                }
-//                                toward = 1;
-//                            }
-//                            if (keyCode==KeyEvent.VK_DOWN && toward != 1)
-//                            {
-//                                System.out.println("你按下了下键");
-//                                bool= hit.hitCheck(kx,ky,2, gf.map);
-//                                if(bool)
-//                                {
-//                                    for(int i = klenth - 1; i > 0; i--)
-//                                    {
-//                                        Tx[i] = Tx[i - 1];
-//                                        Ty[i] = Ty[i - 1];
-//                                    }
-//                                    Tx[0] = kx;
-//                                    Ty[0] = ky;
-//                                    ky+=20;
-//                                }
-//                                toward = 2;
-//                            }
-//                            if (keyCode==KeyEvent.VK_LEFT && toward != 4)
-//                            {
-//                                System.out.println("你按下了左键");
-//                                bool= hit.hitCheck(kx,ky,3, gf.map);
-//                                if(bool)
-//                                {
-//                                    for(int i = klenth - 1; i > 0; i--)
-//                                    {
-//                                        Tx[i] = Tx[i-1];
-//                                        Ty[i] = Ty[i - 1];
-//                                    }
-//                                    Tx[0] = kx;
-//                                    Ty[0] = ky;
-//                                    kx-=20;
-//                                }
-//                                toward = 3;
-//                            }
-//                            if (keyCode==KeyEvent.VK_RIGHT && toward != 3)
-//                            {
-//                                System.out.println("你按下了右键");
-//                                bool= hit.hitCheck(kx,ky,4, gf.map);
-//                                if(bool)
-//                                {
-//                                    for(int i = klenth - 1; i > 0; i--)
-//                                    {
-//                                        Tx[i] = Tx[i-1];
-//                                        Ty[i] = Ty[i - 1];
-//                                    }
-//                                    Tx[0] = kx;
-//                                    Ty[0] = ky;
-//                                    kx+=20;
-//                                }
-//                                toward = 4;
-//                            }
-//                            System.out.println(bool);
-//                            System.out.println(kx+" "+ky);
-//                            jknight.setBounds(kx,ky,20,20);
-//                            for(int i = 0; i < klenth; i++)
-//                            {
-//                                jTail[i].setBounds(Tx[i],Ty[i],20,20);
-//                            }
-                            //检测胜利
-
-                        //}
-
-//                    }
-//                }
-//        );
     }
 }

@@ -1,6 +1,7 @@
 package util;
 
 import org.junit.Test;
+import role.Knight;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -16,21 +17,18 @@ public class Map {
     public int[][] map = null;
 
 
-    @Test
-    public void testResult() throws Exception {
-        int[][] result = readMap();
-        // 二维数组的内容输出，看一下是否是地图的配置信息
-        for(int i = 0 ; i < result.length ; i++ ){
-            for(int j = 0 ; j < result[i].length ; j++) {
-                System.out.print(result[i][j]+" ");
-            }
-            System.out.println();
-        }
-    }
 
-    public int[][] readMap() throws Exception {
+    public int[][] readMap(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("./map.txt");
+        FileInputStream fis = new FileInputStream("./map1.txt");
+        if(index == 0)
+        {
+            fis = new FileInputStream("./map1.txt");
+        }
+        else if(index == 1)
+        {
+            fis = new FileInputStream("./map1.txt");
+        }
 
 
         InputStreamReader isr = new InputStreamReader(fis);
@@ -38,6 +36,7 @@ public class Map {
 
         //直接读取一行数据
         String value = br.readLine();
+        list = new ArrayList<>();
 
         while (value != null) {
             //将读取到的一行数据加入到容器中
