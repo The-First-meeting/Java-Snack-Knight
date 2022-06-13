@@ -11,31 +11,30 @@ import java.util.List;
 
 public class Bullet implements Runnable {
 
-    public List<String> list = new ArrayList<>();
+    public static List<String> list = new ArrayList<>();
 
     public GamePanel gp;
-    public int num;
-    public int[] tx = new int[1000];
-    public int[] ty = new int[1000];
-    public int[] toward = new int[1000];
-    public int[] min = new int[1000];
-    public int[] max = new int[1000];
+    public int bx;
+    public int by;
+    public int toward;
+    public int min;
+    public int max;
     public boolean flag = true;
 
     int x, y;
-    JLabel[] bullet = new JLabel[1000];
+    JLabel bullet;
 
-    public Bullet(GamePanel gp) throws Exception {
+    public Bullet(GamePanel gp,String[] values) throws Exception {
         this.gp = gp;
+        this.toward = Integer.parseInt(values[0]);
+        this.bx = Integer.parseInt(values[1]);
+        this.by = Integer.parseInt(values[2]);
+        this.min = Integer.parseInt(values[3]);
+        this.max = Integer.parseInt(values[4]);
         // 设置子弹的初始位置
-        readBullet();
-        int i;
-        for (i = 0; i < this.num; i++) {
-            bullet[i] = new JLabel(new ImageIcon("image/bullet.png"));
-            this.gp.add(bullet[i]);
-            bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
-        }
-
+        bullet = new JLabel(new ImageIcon("image/bullet.png"));
+        this.gp.add(bullet);
+        bullet.setBounds(this.bx, this.by, 25, 25);
         System.out.println("子弹坐标设置成功");
         // gf.getLayeredPane().add(bullet, Integer.valueOf(Integer.MAX_VALUE));
     }
@@ -44,7 +43,7 @@ public class Bullet implements Runnable {
         this.flag = false;
     }
 
-    public void readBullet() throws Exception {
+    public static List<String> readBullet(int index) throws Exception {
         // 构造文件输入流
         FileInputStream fis = new FileInputStream("bullet/bullet.txt");
 
@@ -60,45 +59,29 @@ public class Bullet implements Runnable {
             list.add(value);
             value = br.readLine();
         }
-
         br.close();
-
-        // 将读到的字符创转换成整数，并赋值
-        int i;
-        this.num = list.size();
-
-        for (i = 0; i < list.size(); i++) {
-            String str = list.get(i);
-            String[] values = str.split(",");
-            this.toward[i] = Integer.parseInt(values[0]);
-            this.tx[i] = Integer.parseInt(values[1]);
-            this.ty[i] = Integer.parseInt(values[2]);
-            this.min[i] = Integer.parseInt(values[3]);
-            this.max[i] = Integer.parseInt(values[4]);
-        }
+        return list;
     }
 
     @Override
     public void run() {
         while (flag) {
-            int i;
-            for (i = 0; i < this.num; i++) {
-                if (this.toward[i] == 1)// 方向为竖
+                if (this.toward == 1)// 方向为竖
                 {
-                    while (this.ty[i] <= this.max[i]) {
-                        this.ty[i]++;
+                    while (this.by <= this.max) {
+                        this.by++;
                         // System.out.println(this.by);
-                        bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
+                        bullet.setBounds(this.bx, this.by, 25, 25);
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    while (this.ty[i] >= this.min[i]) {
-                        this.ty[i]--;
+                    while (this.by >= this.min) {
+                        this.by--;
                         // System.out.println(this.by);
-                        bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
+                        bullet.setBounds(this.bx, this.by, 25, 25);
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
@@ -106,22 +89,22 @@ public class Bullet implements Runnable {
                         }
                     }
                 }
-                else if(this.toward[i] == 0) //子弹方向为横向
+                else if(this.toward == 0) //子弹方向为横向
                 {
-                    while (this.tx[i] <= this.max[i]) {
-                        this.tx[i]++;
+                    while (this.bx <= this.max) {
+                        this.bx++;
                         // System.out.println(this.by);
-                        bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
+                        bullet.setBounds(this.bx, this.by, 25, 25);
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    while (this.tx[i] >= this.min[i]) {
-                        this.tx[i]--;
+                    while (this.bx >= this.min) {
+                        this.bx--;
                         // System.out.println(this.by);
-                        bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
+                        bullet.setBounds(this.bx, this.by, 25, 25);
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
@@ -129,8 +112,6 @@ public class Bullet implements Runnable {
                         }
                     }
                 }
-            }
-
         }
     }
 }
