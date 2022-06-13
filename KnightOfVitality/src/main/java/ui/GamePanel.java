@@ -175,33 +175,36 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             knight.isChangeToward = true;
             //头与子弹碰撞————失败
-            if (this.bullet.bx == this.knight.kx && Math.abs(this.bullet.by - this.knight.ky) <= 25) {
-                System.out.println(this.bullet.by + "====" + this.knight.ky);
-                bullet.stop();
-                isFail = true;
-                GameOver go = new GameOver();
-                go.gameOver();
-                repaint();
-            }
-
-            for (int i = 0; i < knight.klenth; i++) {
-                //尾巴与子弹碰撞————切断
-                if (this.bullet.bx == this.knight.Tx[i] && Math.abs(this.bullet.by - this.knight.Ty[i]) <= 25) {
-                    for (int j = i; j < knight.klenth; j++) {
-                        this.knight.gp.remove(this.knight.jTail[j]);
-                    }
-                    this.knight.klenth = i;
-                }
-                //咬到尾巴————失败
-                if (this.knight.Tx[i] == this.knight.kx && this.knight.Ty[i] == this.knight.ky && knight.bool) {
-                    System.out.println(this.knight.Ty[i] + "====" + this.knight.ky);
+            for(int i = 0;i < this.bullet.num; i++)
+            {
+                if (this.bullet.tx[i] == this.knight.kx && Math.abs(this.bullet.ty[i] - this.knight.ky) <= 25) {
                     bullet.stop();
                     isFail = true;
                     GameOver go = new GameOver();
                     go.gameOver();
                     repaint();
                 }
+                for (int j = 0; j < knight.klenth; j++) {
+                    //尾巴与子弹碰撞————切断
+                    if (this.bullet.tx[i] == this.knight.Tx[j] && Math.abs(this.bullet.ty[i] - this.knight.Ty[j]) <= 25) {
+                        for (int k = j; k < knight.klenth; k++) {
+                            this.knight.gp.remove(this.knight.jTail[k]);
+                        }
+                        this.knight.klenth = j;
+                    }
+                    //咬到尾巴————失败
+                    if (this.knight.Tx[j] == this.knight.kx && this.knight.Ty[j] == this.knight.ky && knight.bool) {
+                        bullet.stop();
+                        isFail = true;
+                        GameOver go = new GameOver();
+                        go.gameOver();
+                        repaint();
+                    }
+                }
             }
+
+
+
 
             //胜利判断
             if (knight.kx == winner.x && knight.ky == winner.y && !isWin) {

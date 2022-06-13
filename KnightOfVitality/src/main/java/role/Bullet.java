@@ -15,13 +15,11 @@ public class Bullet implements Runnable {
 
     public GamePanel gp;
     public int num;
-    public int bx;
-    public int by;
-    public int tx[];
-    public int ty[];
-    public int toward[];
-    public int min[];
-    public int max[];
+    public int[] tx = new int[1000];
+    public int[] ty = new int[1000];
+    public int[] toward = new int[1000];
+    public int[] min = new int[1000];
+    public int[] max = new int[1000];
     public boolean flag = true;
 
     int x, y;
@@ -38,8 +36,6 @@ public class Bullet implements Runnable {
             bullet[i].setBounds(this.tx[i], this.ty[i], 25, 25);
         }
 
-        this.bx = 300;
-        this.by = 200;
         System.out.println("子弹坐标设置成功");
         // gf.getLayeredPane().add(bullet, Integer.valueOf(Integer.MAX_VALUE));
     }
@@ -110,7 +106,7 @@ public class Bullet implements Runnable {
                         }
                     }
                 }
-                else if(this.toward[i] == 1) //子弹方向为横向
+                else if(this.toward[i] == 0) //子弹方向为横向
                 {
                     while (this.tx[i] <= this.max[i]) {
                         this.tx[i]++;
