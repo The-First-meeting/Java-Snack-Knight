@@ -63,13 +63,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 if (map[i][j]==1)//1是道路
                 {
                     JLabel j1=new JLabel(new ImageIcon("image/floor.png"));
-                    j1.setBounds(25*j,25*i+25,25,25);
+                    j1.setBounds(25*j,25*(i-1)+25,25,25);
                     this.add(j1);
                 }
                 else if(map[i][j]==0)//2是墙壁
                 {
                     JLabel j2=new JLabel(new ImageIcon("image/brick.png"));
-                    j2.setBounds(25*j,25*i+25,25,25);
+                    j2.setBounds(25*j,25*(i-1)+25,25,25);
                     this.add(j2);
                 }
                 else
