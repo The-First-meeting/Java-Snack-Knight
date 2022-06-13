@@ -28,7 +28,7 @@ public class Knight implements Runnable{
     public Knight(GamePanel gp,int klenth,int index) throws Exception {
         this.gp=gp;
         this.isChangeToward = true;
-        //读取其实的初识位置
+        //读取骑士的初识位置
         readKnight(index);
         //设置骑士的初始位置
         jknight.setBounds(this.kx,this.ky,25,25);
