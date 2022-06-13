@@ -188,35 +188,49 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             //头与子弹碰撞————失败
             for(int i = 0;i < this.bulletNum; i++)
             {
-                System.out.println(i);
-                System.out.println(this.bullet[i].by + "====" + this.knight.ky);
-                if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 25) {
-                    System.out.println(this.bullet[i].by + "====" + this.knight.ky);
-                    bullet[i].stop();
-                    isFail = true;
-                    GameOver go = new GameOver();
-                    go.gameOver();
-                    repaint();
-                }
-                for (int j = 0; j < knight.klenth; j++) {
-                    //尾巴与子弹碰撞————切断
-                    if (this.bullet[i].bx == this.knight.Tx[j] && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 25) {
-                        for (int k = j; k < knight.klenth; k++) {
-                            this.knight.gp.remove(this.knight.jTail[k]);
+                if(bullet[i].toward == 1)//竖着
+                {
+                    if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 24) {
+                        bullet[i].stop();
+                        isFail = true;
+                        GameOver go = new GameOver();
+                        go.gameOver();
+                        repaint();
+                    }
+                    for (int j = 0; j < knight.klenth; j++) {
+                        //尾巴与子弹碰撞————切断
+                        if (this.bullet[i].bx == this.knight.Tx[j] && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 24) {
+                            for (int k = j; k < knight.klenth; k++) {
+                                this.knight.gp.remove(this.knight.jTail[k]);
+                            }
+                            this.knight.klenth = j;
+                            repaint();
                         }
-                        this.knight.klenth = j;
+                    }
+                }
+                else if(bullet[i].toward == 0)//横着
+                {
+                    if (this.bullet[i].by == this.knight.ky && Math.abs(this.bullet[i].bx - this.knight.kx) <= 24) {
+                        bullet[i].stop();
+                        isFail = true;
+                        GameOver go = new GameOver();
+                        go.gameOver();
+                        repaint();
+                    }
+                    for (int j = 0; j < knight.klenth; j++) {
+                        //尾巴与子弹碰撞————切断
+                        if (this.bullet[i].by == this.knight.Ty[j] && Math.abs(this.bullet[i].bx - this.knight.Tx[j]) <= 24) {
+                            for (int k = j; k < knight.klenth; k++) {
+                                this.knight.gp.remove(this.knight.jTail[k]);
+                            }
+                            this.knight.klenth = j;
+                            repaint();
+                        }
                     }
                 }
             }
 
             for (int i = 0; i < knight.klenth; i++) {
-                //尾巴与子弹碰撞————切断
-                if (this.bullet[i].bx == this.knight.Tx[i] && Math.abs(this.bullet[i].by - this.knight.Ty[i]) <= 25) {
-                    for (int j = i; j < knight.klenth; j++) {
-                        this.knight.gp.remove(this.knight.jTail[j]);
-                    }
-                    this.knight.klenth = i;
-                }
                 //咬到尾巴————失败
                 if (this.knight.Tx[i] == this.knight.kx && this.knight.Ty[i] == this.knight.ky && knight.bool) {
                     System.out.println(this.knight.Ty[i] + "====" + this.knight.ky);
