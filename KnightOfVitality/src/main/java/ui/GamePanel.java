@@ -93,27 +93,27 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     }
 
-    @Override
-    protected void paintComponent(Graphics g){
-        if (!isStart) {
-            g.setColor(Color.black); //设置字体
-            g.setFont(new Font("微软雅黑",Font.BOLD,40));
-            g.drawString("按下空格开始游戏",300,300);
-        }
-        if(isFail){
-            g.setColor(Color.red); //设置字体
-            g.setFont(new Font("微软雅黑",Font.BOLD,40));
-            g.drawString("失败，按下空格重新开始",300,300);
-        }
-        if(isWin){
-            g.setColor(Color.red); //设置字体
-            g.setFont(new Font("微软雅黑",Font.BOLD,40));
-            g.drawString("胜利！按下空格重新开始",300,300);
-        }
-        if(isStart&&!isFail&&!isWin){
-            super.paintComponent(g); // 清屏
-        }
-    }
+//    @Override
+//    protected void paintComponent(Graphics g){
+//        if (!isStart) {
+//            g.setColor(Color.black); //设置字体
+//            g.setFont(new Font("微软雅黑",Font.BOLD,40));
+//            g.drawString("按下空格开始游戏",300,300);
+//        }
+//        if(isFail){
+//            g.setColor(Color.red); //设置字体
+//            g.setFont(new Font("微软雅黑",Font.BOLD,40));
+//            g.drawString("失败，按下空格重新开始",300,300);
+//        }
+//        if(isWin){
+//            g.setColor(Color.red); //设置字体
+//            g.setFont(new Font("微软雅黑",Font.BOLD,40));
+//            g.drawString("胜利！按下空格重新开始",300,300);
+//        }
+//        if(isStart&&!isFail&&!isWin){
+//            super.paintComponent(g); // 清屏
+//        }
+//    }
     @Override
     public void actionPerformed(ActionEvent e) {
         //游戏开始
@@ -267,7 +267,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 else {//游戏胜利
                     this.removeAll();
                     init();
-                    isStart = true;
                     timer.setDelay(300);
                 }
                 repaint();

@@ -15,14 +15,14 @@ public class Winner {
 
     public Winner(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("./winner1.txt");
+        FileInputStream fis = new FileInputStream("winner/winner1.txt");
         if(index == 0)
         {
-            fis = new FileInputStream("./winner1.txt");
+            fis = new FileInputStream("winner/winner1.txt");
         }
         else if(index == 1)
         {
-            fis = new FileInputStream("./winner1.txt");
+            fis = new FileInputStream("winner/winner2.txt");
         }
 
 

@@ -20,14 +20,14 @@ public class Map {
 
     public int[][] readMap(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("./map1.txt");
+        FileInputStream fis = new FileInputStream("map/map1.txt");
         if(index == 0)
         {
-            fis = new FileInputStream("./map1.txt");
+            fis = new FileInputStream("map/map1.txt");
         }
         else if(index == 1)
         {
-            fis = new FileInputStream("./map1.txt");
+            fis = new FileInputStream("map/map2.txt");
         }
 
 
