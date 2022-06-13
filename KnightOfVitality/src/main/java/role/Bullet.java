@@ -16,7 +16,6 @@ public class Bullet implements Runnable{
     public Bullet(GamePanel gp)
     {
         this.gp=gp;
-
         //设置子弹的初始位置
         this.gp.add(bullet);
         bullet.setBounds(300,200,25,25);

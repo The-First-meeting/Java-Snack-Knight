@@ -17,6 +17,8 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public int index;
     public Knight knight;
+    public Winner winner;
+    public int length = 2;
     Thread nightThread;
     Thread bulletThread;
     boolean isStart;
@@ -46,16 +48,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         isFail = false;
         isStart = false;
         isWin = false;
-        //创建骑士信息
-        knight=new Knight(this);
-        //  cd=new CountDown();
-        bullet=new Bullet(this);
         // 读取地图，并配置地图
         try {
+            knight=new Knight(this,length,index);
+            bullet=new Bullet(this);
+            winner=new Winner(index);
             map = mp.readMap(index);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //设置终点
+        JLabel win=new JLabel(new ImageIcon("image/winner.png"));
+        win.setBounds(winner.x,winner.y,25,25);
+        this.add(win);
         for (int i = 0; i < map.length; i++) {
             //System.out.println("map.length="+map.length);
             for (int j = 0; j < map[0].length; j++) {
@@ -85,6 +90,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         //子弹的线程
         bulletThread = new Thread(bullet);
         bulletThread.start();
+
     }
 
     @Override
@@ -198,10 +204,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
 
             //胜利判断
-            if (knight.kx == 200 && knight.ky == 375 && !isWin) {
+            if (knight.kx == winner.x && knight.ky == winner.y && !isWin) {
                 //获得胜利
                 isWin = true;
-                Winner winner = new Winner();
                 winner.winner(knight.klenth);
                 bullet.stop();
                 isFail = false;
