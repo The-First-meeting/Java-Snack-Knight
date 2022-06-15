@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bullet implements Runnable {
-
     public static List<String> list = new ArrayList<>();
-
     public GamePanel gp;
     public int bx;
     public int by;
@@ -20,10 +18,7 @@ public class Bullet implements Runnable {
     public int min;
     public int max;
     public boolean flag = true;
-
-    int x, y;
     JLabel bullet;
-
     public Bullet(GamePanel gp,String[] values) throws Exception {
         this.gp = gp;
         this.toward = Integer.parseInt(values[0]);
@@ -45,7 +40,15 @@ public class Bullet implements Runnable {
 
     public static List<String> readBullet(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("bullet/bullet.txt");
+        FileInputStream fis = new FileInputStream("bullet/bullet1.txt");
+        if(index == 0)
+        {
+            fis = new FileInputStream("bullet/bullet1.txt");
+        }
+        else if(index == 1)
+        {
+            fis = new FileInputStream("bullet/bullet2.txt");
+        }
 
         InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader br = new BufferedReader(isr);
