@@ -3,6 +3,7 @@ package role;
 import ui.GamePanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -31,19 +32,23 @@ public class Arrow implements Runnable{
         // 设置弩箭的初始位置
         if(toward == 0)//往上
         {
-            arrow = new JLabel(new ImageIcon("image/arrowUp.png"));
+            ImageIcon iconUp = new ImageIcon("image/arrowUp.png");
+            arrow = new JLabel(iconUp);
         }
         else if(toward == 1)//往下
         {
-            arrow = new JLabel(new ImageIcon("image/arrowDown.png"));
+            ImageIcon iconDown = new ImageIcon("image/arrowDown.png");
+            arrow = new JLabel(iconDown);
         }
         else if(toward == 2)//往左
         {
-            arrow = new JLabel(new ImageIcon("image/arrowLeft.png"));
+            ImageIcon iconLeft = new ImageIcon("image/arrowLeft.png");
+            arrow = new JLabel(iconLeft);
         }
         else
         {
-            arrow = new JLabel(new ImageIcon("image/arrowRight.png"));
+            ImageIcon iconRight = new ImageIcon("image/arrowRight.png");
+            arrow = new JLabel(iconRight);
         }
         this.gp.add(arrow);
         arrow.setBounds(this.ax, this.ay, 25, 25);

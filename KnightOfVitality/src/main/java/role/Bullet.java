@@ -3,6 +3,7 @@ package role;
 import ui.GamePanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -27,7 +28,9 @@ public class Bullet implements Runnable {
         this.min = Integer.parseInt(values[3]);
         this.max = Integer.parseInt(values[4]);
         // 设置子弹的初始位置
-        bullet = new JLabel(new ImageIcon("image/bullet.png"));
+        ImageIcon iconBullet = new ImageIcon("image/bullet.png");
+        iconBullet.setImage(iconBullet.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
+        bullet = new JLabel(iconBullet);
         this.gp.add(bullet);
         bullet.setBounds(this.bx, this.by, 25, 25);
         System.out.println("子弹坐标设置成功");

@@ -14,18 +14,22 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public java.util.List<String> listBullet = new ArrayList<>();
     public java.util.List<String> listArrow = new ArrayList<>();
+    public java.util.List<String> listSpike = new ArrayList<>();
     public int index;
     public Knight knight;
     public Winner winner;
     public int length = 2;
-    Thread nightThread;
+    Thread knightThread;
     Thread[] bulletThread = new Thread[100];
     Thread[] arrowThread = new Thread[100];
+    Thread[] spikeThread = new Thread[100];
     boolean isStart;
     boolean isFail;
     boolean isWin;
     public Bullet[] bullet = new Bullet[100];
     public Arrow[] arrow = new Arrow[100];
+    public Spike[] spike = new Spike[100];
+    public int spikeNum;
     public int bulletNum;
     public int arrowNum;
     Timer timer = new Timer(300,this);//时钟信息
@@ -58,6 +62,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             map = mp.readMap(index);
             listBullet = Bullet.readBullet(index);
             listArrow = Arrow.readArrow(index);
+            listSpike = Spike.readSpike(index);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,23 +80,37 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             String[] values = str.split(",");
             arrow[i] = new Arrow(this,values);
         }
+        spikeNum = listSpike.size();
+        for(int i = 0; i < spikeNum; i++)
+        {
+            String str = listSpike.get(i);
+            String[] values = str.split(",");
+            spike[i] = new Spike(this,values);
+        }
         //设置终点
-        JLabel win=new JLabel(new ImageIcon("image/winner.png"));
+        ImageIcon iconWinner = new ImageIcon("image/winner.png");
+        iconWinner.setImage(iconWinner.getImage().getScaledInstance(20,25, Image.SCALE_DEFAULT));
+        JLabel win=new JLabel(iconWinner);
         win.setBounds(winner.x,winner.y,25,25);
         this.add(win);
+        //加载地图
+        ImageIcon iconFloor = new ImageIcon("image/floor.png");
+        iconFloor.setImage(iconFloor.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
+        ImageIcon iconBrick = new ImageIcon("image/brick.png");
+        iconBrick.setImage(iconBrick.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
         for (int i = 0; i < map.length; i++) {
             //System.out.println("map.length="+map.length);
             for (int j = 0; j < map[0].length; j++) {
                 //System.out.println("现在是:"+i+"行，"+j+"列");
                 if (map[i][j]==1)//1是道路
                 {
-                    JLabel j1=new JLabel(new ImageIcon("image/floor.png"));
+                    JLabel j1=new JLabel(iconFloor);
                     j1.setBounds(25*j,25*(i-1)+25,25,25);
                     this.add(j1);
                 }
                 else if(map[i][j]==0)//2是墙壁
                 {
-                    JLabel j2=new JLabel(new ImageIcon("image/brick.png"));
+                    JLabel j2=new JLabel(iconBrick);
                     j2.setBounds(25*j,25*(i-1)+25,25,25);
                     this.add(j2);
                 }
@@ -103,8 +122,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         }
 
         //设置骑士的线程
-        nightThread = new Thread(knight);
-        nightThread.start();
+        knightThread = new Thread(knight);
+        knightThread.start();
         //子弹的线程
         for(int i = 0; i < bulletNum; i++)
         {
@@ -115,6 +134,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         for(int i = 0; i < arrowNum; i++)
         {
             arrowThread[i] = new Thread(arrow[i]);
+        }
+        //地刺的线程
+        for(int i = 0; i < spikeNum; i++)
+        {
+            spikeThread[i] = new Thread(spike[i]);
+            spikeThread[i].start();
         }
     }
 
@@ -178,11 +203,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 25, 25);
             }
             knight.isChangeToward = true;
-            //头与子弹碰撞————失败
+            //与子弹碰撞
             for(int i = 0; i < this.bulletNum; i++)
             {
                 if(bullet[i].toward == 1)//竖着
                 {
+                    //头碰撞——失败
                     if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 24) {
                         bullet[i].stop();
                         isFail = true;
@@ -203,6 +229,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 }
                 else if(bullet[i].toward == 0)//横着
                 {
+                    //头碰撞——失败
                     if (this.bullet[i].by == this.knight.ky && Math.abs(this.bullet[i].bx - this.knight.kx) <= 24) {
                         bullet[i].stop();
                         isFail = true;
@@ -233,6 +260,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 }
                 if(arrow[i].toward == 0 || arrow[i].toward == 1)//竖着
                 {
+                    //头碰撞——失败
                     if (this.arrow[i].ax == this.knight.kx && Math.abs(this.arrow[i].ay - this.knight.ky) <= 24) {
                         isFail = true;
                         GameOver go = new GameOver();
@@ -270,7 +298,32 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                 }
             }
-
+            //与地刺碰撞
+            for(int i = 0; i < spikeNum; i++)
+            {
+                if(spike[i].on)//刺启动时
+                {
+                    //头碰撞——失败
+                    if(this.knight.kx == spike[i].sx && this.knight.ky == spike[i].sy)
+                    {
+                        isFail = true;
+                        GameOver go = new GameOver();
+                        go.gameOver();
+                        repaint();
+                    }
+                    //尾巴碰撞————切断
+                    for(int j = 0; j < knight.klenth; j++)
+                    {
+                        if (this.spike[i].sy == this.knight.Ty[j] && this.spike[i].sx == this.knight.Tx[j]) {
+                            for (int k = j; k < knight.klenth; k++) {
+                                this.knight.gp.remove(this.knight.jTail[k]);
+                            }
+                            this.knight.klenth = j;
+                            repaint();
+                        }
+                    }
+                }
+            }
             for (int i = 0; i < knight.klenth; i++) {
                 //咬到尾巴————失败
                 if (this.knight.Tx[i] == this.knight.kx && this.knight.Ty[i] == this.knight.ky && knight.bool) {

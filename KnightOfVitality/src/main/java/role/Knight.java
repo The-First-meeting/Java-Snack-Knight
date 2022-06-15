@@ -5,6 +5,7 @@ import ui.GamePanel;
 import util.Hit;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -21,11 +22,14 @@ public class Knight implements Runnable{
     public int Tx[] = new int[100];
     public int Ty[] = new int[100];
     public int klenth;
-    public JLabel jknight = new JLabel(new ImageIcon("image/knight.png"));
+    public JLabel jknight = new JLabel();
     public JLabel[] jTail = new JLabel[100];
     public boolean bool;
     public Hit hit=new Hit();
     public Knight(GamePanel gp,int klenth,int index) throws Exception {
+        ImageIcon iconKnight= new ImageIcon("image/knight.png");
+        iconKnight.setImage(iconKnight.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
+        jknight.setIcon(iconKnight);
         this.gp=gp;
         this.isChangeToward = true;
         //读取骑士的初识位置
@@ -33,9 +37,11 @@ public class Knight implements Runnable{
         //设置骑士的初始位置
         jknight.setBounds(this.kx,this.ky,25,25);
         this.klenth = klenth;
+        ImageIcon iconTail= new ImageIcon("image/knight.png");
+        iconTail.setImage(iconTail.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
         for(int i = 0; i < klenth; i++)
         {
-            jTail[i] = new JLabel(new ImageIcon("image/knight.png"));
+            jTail[i] = new JLabel(iconTail);
             Tx[i] = this.kx;
             Ty[i] = this.ky;
         }
@@ -92,7 +98,5 @@ public class Knight implements Runnable{
 
     @Override
     public void run() {
-        this.kx=kx;
-        this.ky=ky;
     }
 }
