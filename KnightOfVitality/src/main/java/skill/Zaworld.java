@@ -1,11 +1,7 @@
 package skill;
 
-import ui.Data;
 import ui.GamePanel;
-import util.Hit;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;

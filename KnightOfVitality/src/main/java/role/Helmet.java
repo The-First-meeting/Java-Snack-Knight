@@ -1,19 +1,15 @@
 package role;
 
-import ui.Data;
 import ui.GamePanel;
-import util.Hit;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Helmet implements Runnable{
     public List<String> list = new ArrayList<>();
+
     public GamePanel gp;
     public int hx;
     public int hy;
@@ -49,7 +45,43 @@ public class Helmet implements Runnable{
         String[] values = str.split(",");
         this.hel_num=Integer.parseInt(values[0]);
     }
+    public static void writeHel(String str, String path) throws IOException {
+        //文件目录
+        File writefile;
+        BufferedWriter bw;
+        writefile = new File(path);
+        boolean append = false;  //  是否追加
+        if (!writefile.exists())   // 判断文件是否存在，不存在则生成
+        {
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        } else {        // 存在先删除，再创建
+            writefile.delete();
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        }
+        try {
+            FileWriter fw = new FileWriter(writefile, append);
+            bw = new BufferedWriter(fw);
+            fw.write(str);
+            fw.flush();
+            fw.close();
 
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+    }
     @Override
     public void run() {
     }

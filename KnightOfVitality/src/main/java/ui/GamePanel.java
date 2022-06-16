@@ -30,7 +30,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public boolean is_have_zaworld;
     public Zaworld zaworld;
     public Knight knight;
-    public Helmet helmet;
     public Winner winner;
     public int length = 2;
     Thread knightThread;
@@ -88,7 +87,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         // 读取地图，并配置地图
         try {
             knight = new Knight(this, length, index);
-            helmet = new Helmet(this);
             winner = new Winner(index);
             speedup = new Speedup(this);
             zaworld = new Zaworld(this);
@@ -102,15 +100,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             e.printStackTrace();
         }
         // 读取头盔数据
-        if (this.helmet.hel_num > 0) {
+        if (this.knight.helmet.hel_num > 0) {
             isHel = true;
-            ImageIcon iconHelmet = new ImageIcon("image/greenbullet.png");
-            iconHelmet.setImage(iconHelmet.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-            this.helmet.jhelmet = new JLabel(iconHelmet);
-            this.helmet.hx = this.knight.kx;
-            this.helmet.hy = this.knight.ky;
-            this.helmet.toward = this.knight.toward;
-            this.helmet.gp.add(this.helmet.jhelmet, 0);
+        }
+        else
+        {
+            isHel = false;
         }
         // 读取加速技能
         if (this.speedup.speed_num > 0) {
@@ -183,9 +178,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         // 设置骑士的线程
         knightThread = new Thread(knight);
         knightThread.start();
-        // 设置头盔的线程
-        helmetThread = new Thread(helmet);
-        helmetThread.start();
         //加速技能的线程
         speedUpThread = new Thread(speedup);
         speedUpThread.start();
@@ -271,8 +263,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             // 刷新图画
             knight.jknight.setBounds(knight.kx, knight.ky, 25, 25);
-            if (this.helmet.hel_num > 0) {
-                helmet.jhelmet.setBounds(knight.kx, knight.ky, 25, 25);
+            if (isHel) {
+                knight.jhelmet.setBounds(knight.kx, knight.ky, 25, 25);
             }
             for (int i = 0; i < knight.klenth; i++) {
                 knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 25, 25);
@@ -322,8 +314,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     // 头碰撞——失败
                     if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 24) {
                         if (isHel) {
+                            knight.helmet.hel_num--;
                             isHel = false;
-                            this.helmet.gp.remove(this.helmet.jhelmet);
+                            String path = "helmet/helmet.txt";
+                            try {
+                                Helmet.writeHel(knight.helmet.hel_num + "", path);
+                            } catch (IOException E) {
+                                E.printStackTrace();
+                            }
+                            this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             bullet[i].stop();
                             isFail = true;
@@ -348,8 +347,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     // 头碰撞——失败
                     if (this.bullet[i].by == this.knight.ky && Math.abs(this.bullet[i].bx - this.knight.kx) <= 24) {
                         if (isHel) {
+                            knight.helmet.hel_num--;
                             isHel = false;
-                            this.helmet.gp.remove(this.helmet.jhelmet);
+                            String path = "helmet/helmet.txt";
+                            try {
+                                Helmet.writeHel(knight.helmet.hel_num + "", path);
+                            } catch (IOException E) {
+                                E.printStackTrace();
+                            }
+                            this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             bullet[i].stop();
                             isFail = true;
@@ -384,8 +390,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     // 头碰撞——失败
                     if (this.arrow[i].ax == this.knight.kx && Math.abs(this.arrow[i].ay - this.knight.ky) <= 24) {
                         if (isHel) {
+                            knight.helmet.hel_num--;
                             isHel = false;
-                            this.helmet.gp.remove(this.helmet.jhelmet);
+                            String path = "helmet/helmet.txt";
+                            try {
+                                Helmet.writeHel(knight.helmet.hel_num + "", path);
+                            } catch (IOException E) {
+                                E.printStackTrace();
+                            }
+                            this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             isFail = true;
                             GameOver go = new GameOver();
@@ -408,8 +421,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 {
                     if (this.arrow[i].ay == this.knight.ky && Math.abs(this.arrow[i].ax - this.knight.kx) <= 24) {
                         if (isHel) {
+                            knight.helmet.hel_num--;
                             isHel = false;
-                            this.helmet.gp.remove(this.helmet.jhelmet);
+                            String path = "helmet/helmet.txt";
+                            try {
+                                Helmet.writeHel(knight.helmet.hel_num + "", path);
+                            } catch (IOException E) {
+                                E.printStackTrace();
+                            }
+                            this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             isFail = true;
                             GameOver go = new GameOver();
@@ -437,8 +457,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     // 头碰撞——失败
                     if (this.knight.kx == spike[i].sx && this.knight.ky == spike[i].sy) {
                         if (isHel) {
+                            knight.helmet.hel_num--;
                             isHel = false;
-                            this.helmet.gp.remove(this.helmet.jhelmet);
+                            String path = "helmet/helmet.txt";
+                            try {
+                                Helmet.writeHel(knight.helmet.hel_num + "", path);
+                            } catch (IOException E) {
+                                E.printStackTrace();
+                            }
+                            this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             isFail = true;
                             GameOver go = new GameOver();

@@ -1,6 +1,5 @@
 package role;
 
-import ui.Data;
 import ui.GamePanel;
 import util.Hit;
 
@@ -15,6 +14,7 @@ import java.util.List;
 public class Knight implements Runnable{
     public List<String> list = new ArrayList<>();
     public GamePanel gp;
+    public Helmet helmet;
     public int kx;
     public int ky;
     public boolean isChangeToward;
@@ -23,6 +23,7 @@ public class Knight implements Runnable{
     public int Ty[] = new int[100];
     public int klenth;
     public JLabel jknight = new JLabel();
+    public JLabel jhelmet = new JLabel();
     public JLabel[] jTail = new JLabel[100];
     public boolean bool;
     public Hit hit=new Hit();
@@ -45,13 +46,27 @@ public class Knight implements Runnable{
             Tx[i] = this.kx;
             Ty[i] = this.ky;
         }
-
+        System.out.println("骑士坐标设置成功");
+        helmet = new Helmet(this.gp);
+        if(helmet.hel_num > 0)
+        {
+            ImageIcon iconHelmet = new ImageIcon("image/greenbullet.png");
+            iconHelmet.setImage(iconHelmet.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+            jhelmet = new JLabel(iconHelmet);
+            this.gp.add(jhelmet);
+            helmet.hx = kx;
+            helmet.hy = ky;
+            helmet.toward = toward;
+        }
+        jhelmet.setBounds(helmet.hx,helmet.hy,25,25);
         this.gp.add(jknight);
         for(int i = 0; i < klenth; i++)
         {
             this.gp.add(jTail[i]);
+            jTail[i].setBounds(this.Tx[i],this.Ty[i],25,25);
         }
-        System.out.println("骑士坐标设置成功");
+
+
 //        gf.getLayeredPane().add(jknight, Integer.valueOf(Integer.MAX_VALUE));
 //        for(int i = 0; i < klenth; i++)
 //        {
