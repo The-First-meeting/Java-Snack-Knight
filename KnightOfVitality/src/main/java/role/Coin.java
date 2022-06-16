@@ -20,7 +20,6 @@ public class Coin implements Runnable{
         this.gp = gp;
         this.bx = Integer.parseInt(values[0]);
         this.by = Integer.parseInt(values[1]);
-
         // 设置金币的初始位置
         ImageIcon iconCoin = new ImageIcon("image/coin1.png");
         iconCoin.setImage(iconCoin.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
@@ -41,6 +40,8 @@ public class Coin implements Runnable{
             fis = new FileInputStream("coin/coin1.txt");
         } else if (index == 1) {
             fis = new FileInputStream("coin/coin2.txt");
+        }else if (index == 2) {
+            fis = new FileInputStream("coin/coin3.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

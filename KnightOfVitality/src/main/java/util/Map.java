@@ -29,6 +29,10 @@ public class Map {
         {
             fis = new FileInputStream("map/map2.txt");
         }
+        else if(index == 2)
+        {
+            fis = new FileInputStream("map/map3.txt");
+        }
 
 
         InputStreamReader isr = new InputStreamReader(fis);

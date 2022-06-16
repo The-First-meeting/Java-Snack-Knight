@@ -86,6 +86,10 @@ public class Knight implements Runnable{
         {
             fis = new FileInputStream("knight/knight2.txt");
         }
+        else if(index == 2)
+        {
+            fis = new FileInputStream("knight/knight3.txt");
+        }
 
 
         InputStreamReader isr = new InputStreamReader(fis);

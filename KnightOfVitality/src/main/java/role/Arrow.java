@@ -70,6 +70,10 @@ public class Arrow implements Runnable{
         {
             fis = new FileInputStream("arrow/arrow2.txt");
         }
+        else if(index == 2)
+        {
+            fis = new FileInputStream("arrow/arrow3.txt");
+        }
 
         InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader br = new BufferedReader(isr);

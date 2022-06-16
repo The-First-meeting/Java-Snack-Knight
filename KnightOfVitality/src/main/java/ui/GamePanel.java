@@ -133,7 +133,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             spike[i] = new Spike(this, values);
         }
         coinNum = listCoin.size();
-        for (int i = 0; i < spikeNum; i++) {
+        for (int i = 0; i < coinNum; i++) {
             String str = listCoin.get(i);
             String[] values = str.split(",");
             coin[i] = new Coin(this, values);

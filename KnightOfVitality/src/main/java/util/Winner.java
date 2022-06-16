@@ -23,6 +23,10 @@ public class Winner {
         {
             fis = new FileInputStream("winner/winner2.txt");
         }
+        else if(index == 2)
+        {
+            fis = new FileInputStream("winner/winner3.txt");
+        }
 
 
         InputStreamReader isr = new InputStreamReader(fis);
