@@ -15,10 +15,7 @@ import java.util.List;
 public class Zaworld implements Runnable{
     public List<String> list = new ArrayList<>();
     public GamePanel gp;
-
     public int zaworld_num=0;
-
-
     public Zaworld(GamePanel gp) throws Exception {
         this.gp = gp;
         readZaworld();

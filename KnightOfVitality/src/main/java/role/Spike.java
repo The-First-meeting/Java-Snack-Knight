@@ -66,6 +66,16 @@ public class Spike implements Runnable{
         br.close();
         return list;
     }
+    public void stop(){
+        this.flag = false;
+        on = false;
+        spikeOn.setVisible(false);
+        spikeOff.setVisible(true);
+
+    }
+    public void begin(){
+        this.flag = true;
+    }
     @Override
     public void run() {
         while(flag)

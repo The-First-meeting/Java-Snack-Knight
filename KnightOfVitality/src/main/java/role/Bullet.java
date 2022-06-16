@@ -40,7 +40,7 @@ public class Bullet implements Runnable {
     public void stop() {
         this.flag = false;
     }
-
+    public void begin(){this.flag = true;}
     public static List<String> readBullet(int index) throws Exception {
         // 构造文件输入流
         FileInputStream fis = new FileInputStream("bullet/bullet1.txt");
@@ -74,7 +74,7 @@ public class Bullet implements Runnable {
         while (flag) {
                 if (this.toward == 1)// 方向为竖
                 {
-                    while (this.by <= this.max) {
+                    while (this.by <= this.max && flag) {
                         this.by++;
                         // System.out.println(this.by);
                         bullet.setBounds(this.bx, this.by, 25, 25);
@@ -84,7 +84,7 @@ public class Bullet implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                    while (this.by >= this.min) {
+                    while (this.by >= this.min && flag) {
                         this.by--;
                         // System.out.println(this.by);
                         bullet.setBounds(this.bx, this.by, 25, 25);
@@ -97,7 +97,7 @@ public class Bullet implements Runnable {
                 }
                 else if(this.toward == 0) //子弹方向为横向
                 {
-                    while (this.bx <= this.max) {
+                    while (this.bx <= this.max && flag) {
                         this.bx++;
                         // System.out.println(this.by);
                         bullet.setBounds(this.bx, this.by, 25, 25);
@@ -107,7 +107,7 @@ public class Bullet implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                    while (this.bx >= this.min) {
+                    while (this.bx >= this.min && flag) {
                         this.bx--;
                         // System.out.println(this.by);
                         bullet.setBounds(this.bx, this.by, 25, 25);

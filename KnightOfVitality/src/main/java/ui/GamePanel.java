@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public java.util.List<String> listBullet = new ArrayList<>();
@@ -34,6 +35,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public int length = 2;
     Thread knightThread;
     Thread helmetThread;
+    Thread speedUpThread;
     Thread[] bulletThread = new Thread[100];
     Thread[] arrowThread = new Thread[100];
     Thread[] spikeThread = new Thread[100];
@@ -53,7 +55,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public int arrowNum;
     public int coinNum;
     public int toxicNum;
-    Timer timer = new Timer(300, this);// 时钟信息
+    Timer timer = new Timer(300,this);// 时钟信息
     public int[][] map = null;// 地图信息
     // 实例代码块中初始化地图资源的数据
     Map mp = new Map();
@@ -184,7 +186,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         // 设置头盔的线程
         helmetThread = new Thread(helmet);
         helmetThread.start();
-
+        //加速技能的线程
+        speedUpThread = new Thread(speedup);
+        speedUpThread.start();
         // 子弹的线程
         for (int i = 0; i < bulletNum; i++) {
             bulletThread[i] = new Thread(bullet[i]);
@@ -499,9 +503,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 // 加速
                 if (keyCode == e.VK_SHIFT) {
                     if (this.is_have_speedup) {
-                        this.is_have_speedup = false;
                         System.out.println("使用加速技能");
                         timer.setDelay(100);
+                        java.util.Timer timerHere = new java.util.Timer();
+                        timerHere.schedule(new TimerTask(){
+                            public void run(){
+                                timer.setDelay(300);
+                            }
+                        },500);
+                        is_have_speedup = false;
+                        timerHere.schedule(new TimerTask() {
+                            public void run() {
+                                is_have_speedup = true;
+                            }
+                        },3000);
                     }
                 }
 
@@ -513,22 +528,33 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
                         // 子弹的线程
                         for (int i = 0; i < bulletNum; i++) {
-                            
-                            try {
-                                bulletThread[i].sleep(1000,0);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
+                            bullet[i].stop();
                         }
-                        // 地刺的线程
+                        for(int i = 0; i < bulletNum; i++)
+                        {
+                            java.util.Timer timerHere = new java.util.Timer();
+                            int finalI = i;
+                            timerHere.schedule(new TimerTask(){
+                                public void run(){
+                                    bullet[finalI].begin();
+                                    bullet[finalI].run();
+                                }
+                            },3000);
+                        }
+//                         地刺的线程
                         for (int i = 0; i < spikeNum; i++) {
-                            try {
-                                spikeThread[i].sleep(1000,0);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
+                            spike[i].stop();
+                        }
+                        for(int i = 0; i < spikeNum; i++)
+                        {
+                            java.util.Timer timerHere = new java.util.Timer();
+                            int finalI = i;
+                            timerHere.schedule(new TimerTask(){
+                                public void run(){
+                                    spike[finalI].begin();
+                                    spike[finalI].run();
+                                }
+                            },3000);
                         }
                     }
                 }

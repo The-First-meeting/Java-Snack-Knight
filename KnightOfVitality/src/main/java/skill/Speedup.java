@@ -15,7 +15,7 @@ import java.util.List;
 public class Speedup implements Runnable{
     public List<String> list = new ArrayList<>();
     public GamePanel gp;
-
+    public boolean flag;
     public int speed_num=0;
 
 
