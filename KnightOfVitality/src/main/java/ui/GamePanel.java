@@ -242,6 +242,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
                     this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
                     this.knight.gp.add(this.knight.jTail[knight.klenth], 1);
+
                     this.knight.klenth++;
                     this.coin[i].gp.remove(this.coin[i].coin);
                     repaint();
