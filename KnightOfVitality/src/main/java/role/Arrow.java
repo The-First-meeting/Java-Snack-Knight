@@ -91,7 +91,7 @@ public class Arrow implements Runnable{
         while (flag) {
             if (this.toward == 0)// 向上
             {
-                while (this.ay >= this.end) {
+                while (this.ay > this.end) {
                     this.ay--;
                     // System.out.println(this.by);
                     arrow.setBounds(this.ax, this.ay, 25, 25);
@@ -104,7 +104,7 @@ public class Arrow implements Runnable{
             }
             else if(this.toward == 1) //向下
             {
-                while (this.ay <= this.end) {
+                while (this.ay < this.end) {
                     this.ay++;
                     // System.out.println(this.by);
                     arrow.setBounds(this.ax, this.ay, 25, 25);
@@ -117,7 +117,7 @@ public class Arrow implements Runnable{
             }
             else if(this.toward == 2) //向左
             {
-                while (this.ax >= this.end) {
+                while (this.ax > this.end) {
                     this.ax--;
                     // System.out.println(this.by);
                     arrow.setBounds(this.ax, this.ay, 25, 25);
@@ -130,7 +130,7 @@ public class Arrow implements Runnable{
             }
             else if(this.toward == 3) //向右
             {
-                while (this.ax <= this.end) {
+                while (this.ax < this.end) {
                     this.ax++;
                     // System.out.println(this.by);
                     arrow.setBounds(this.ax, this.ay, 25, 25);
@@ -142,6 +142,10 @@ public class Arrow implements Runnable{
                 }
             }
             this.flag = false;
+            this.sety = 0;
+            this.setx = 0;
+            this.ax = 0;
+            this.ay = 0;
         }
     }
 }

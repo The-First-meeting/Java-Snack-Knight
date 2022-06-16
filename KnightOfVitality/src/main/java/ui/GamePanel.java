@@ -20,9 +20,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public int index;
     public boolean isSlow;
     public Knight knight;
+    public Helmet helmet;
     public Winner winner;
     public int length = 2;
     Thread knightThread;
+    Thread helmetThread;
     Thread[] bulletThread = new Thread[100];
     Thread[] arrowThread = new Thread[100];
     Thread[] spikeThread = new Thread[100];
@@ -31,6 +33,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     boolean isStart;
     boolean isFail;
     boolean isWin;
+    boolean isHel;
     public Bullet[] bullet = new Bullet[100];
     public Arrow[] arrow = new Arrow[100];
     public Spike[] spike = new Spike[100];
@@ -65,9 +68,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         isFail = false;
         isStart = false;
         isWin = false;
+        isHel = false;
         // 读取地图，并配置地图
         try {
             knight = new Knight(this, length, index);
+            helmet = new Helmet(this);
             winner = new Winner(index);
             map = mp.readMap(index);
             listBullet = Bullet.readBullet(index);
@@ -77,6 +82,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             listToxic = Toxic.readToxic(index);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (this.helmet.hel_num > 0) {
+            isHel = true;
+            ImageIcon iconHelmet = new ImageIcon("image/greenbullet.png");
+            iconHelmet.setImage(iconHelmet.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+            this.helmet.jhelmet = new JLabel(iconHelmet);
+            this.helmet.hx = this.knight.kx;
+            this.helmet.hy = this.knight.ky;
+            this.helmet.toward = this.knight.toward;
+            this.helmet.gp.add(this.helmet.jhelmet, 0);
         }
         bulletNum = listBullet.size();
         for (int i = 0; i < bulletNum; i++) {
@@ -143,6 +158,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         // 设置骑士的线程
         knightThread = new Thread(knight);
         knightThread.start();
+        // 设置头盔的线程
+        helmetThread = new Thread(helmet);
+        helmetThread.start();
+
         // 子弹的线程
         for (int i = 0; i < bulletNum; i++) {
             bulletThread[i] = new Thread(bullet[i]);
@@ -157,7 +176,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             spikeThread[i] = new Thread(spike[i]);
             spikeThread[i].start();
         }
-        //金币的线程
+        // 金币的线程
         for (int i = 0; i < coinNum; i++) {
             coinThread[i] = new Thread(coin[i]);
             coinThread[i].start();
@@ -226,6 +245,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             // 刷新图画
             knight.jknight.setBounds(knight.kx, knight.ky, 25, 25);
+            if (this.helmet.hel_num > 0) {
+                helmet.jhelmet.setBounds(knight.kx, knight.ky, 25, 25);
+            }
             for (int i = 0; i < knight.klenth; i++) {
                 knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 25, 25);
             }
@@ -259,16 +281,17 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             for (int i = 0; i < this.coinNum; i++) {
                 // 头碰撞——吃到
                 if (this.coin[i].bx == this.knight.kx && this.coin[i].by == this.knight.ky) {
-                    System.out.println("吃到金币 "+this.knight.klenth);
-                    coinThread[i].stop();
-                    ImageIcon iconTail= new ImageIcon("image/knight.png");
-                    iconTail.setImage(iconTail.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
+                    System.out.println("吃到金币 " + this.knight.klenth);
+                    ImageIcon iconTail = new ImageIcon("image/knight.png");
+                    iconTail.setImage(iconTail.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
                     this.knight.jTail[this.knight.klenth] = new JLabel(iconTail);
                     this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
                     this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
-                    this.knight.gp.add(this.knight.jTail[knight.klenth],1);
+                    this.knight.gp.add(this.knight.jTail[knight.klenth], 1);
                     this.knight.klenth++;
                     this.coin[i].gp.remove(this.coin[i].coin);
+                    this.coin[i].bx = 0;
+                    this.coin[i].by = 0;
                     repaint();
                 }
             }
@@ -278,15 +301,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 24) {
-                        bullet[i].stop();
-                        isFail = true;
-                        GameOver go = new GameOver();
-                        go.gameOver();
-                        repaint();
+                        if (isHel) {
+                            isHel = false;
+                            this.helmet.gp.remove(this.helmet.jhelmet);
+                        } else {
+                            bullet[i].stop();
+                            isFail = true;
+                            GameOver go = new GameOver();
+                            go.gameOver();
+                            repaint();
+                        }
                     }
                     for (int j = 0; j < knight.klenth; j++) {
                         // 尾巴与子弹碰撞————切断
-                        if (this.bullet[i].bx == this.knight.Tx[j] && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 24) {
+                        if (this.bullet[i].bx == this.knight.Tx[j]
+                                && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 24) {
                             for (int k = j; k < knight.klenth; k++) {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
@@ -298,11 +327,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.bullet[i].by == this.knight.ky && Math.abs(this.bullet[i].bx - this.knight.kx) <= 24) {
-                        bullet[i].stop();
-                        isFail = true;
-                        GameOver go = new GameOver();
-                        go.gameOver();
-                        repaint();
+                        if (isHel) {
+                            isHel = false;
+                            this.helmet.gp.remove(this.helmet.jhelmet);
+                        } else {
+                            bullet[i].stop();
+                            isFail = true;
+                            GameOver go = new GameOver();
+                            go.gameOver();
+                            repaint();
+                        }
                     }
                     for (int j = 0; j < knight.klenth; j++) {
                         // 尾巴与子弹碰撞————切断
@@ -318,7 +352,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 }
             }
             // 与弩箭碰撞
-            for (int i = 0; i < this.arrowNum; i++) {
+            int tempNum = arrowNum;
+            for (int i = 0; i < tempNum; i++) {
                 // 头触发弩箭
                 if (arrow[i].setx == this.knight.kx && arrow[i].sety == this.knight.ky) {
                     arrow[i].shot();
@@ -328,10 +363,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.arrow[i].ax == this.knight.kx && Math.abs(this.arrow[i].ay - this.knight.ky) <= 24) {
-                        isFail = true;
-                        GameOver go = new GameOver();
-                        go.gameOver();
-                        repaint();
+                        if (isHel) {
+                            isHel = false;
+                            this.helmet.gp.remove(this.helmet.jhelmet);
+                        } else {
+                            isFail = true;
+                            GameOver go = new GameOver();
+                            go.gameOver();
+                            repaint();
+                        }
                     }
                     for (int j = 0; j < knight.klenth; j++) {
                         // 尾巴与弩箭碰撞————切断
@@ -347,10 +387,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 } else// 横着
                 {
                     if (this.arrow[i].ay == this.knight.ky && Math.abs(this.arrow[i].ax - this.knight.kx) <= 24) {
-                        isFail = true;
-                        GameOver go = new GameOver();
-                        go.gameOver();
-                        repaint();
+                        if (isHel) {
+                            isHel = false;
+                            this.helmet.gp.remove(this.helmet.jhelmet);
+                        } else {
+                            isFail = true;
+                            GameOver go = new GameOver();
+                            go.gameOver();
+                            repaint();
+                        }
                     }
                     for (int j = 0; j < knight.klenth; j++) {
                         // 尾巴与子弹碰撞————切断
@@ -371,10 +416,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.knight.kx == spike[i].sx && this.knight.ky == spike[i].sy) {
-                        isFail = true;
-                        GameOver go = new GameOver();
-                        go.gameOver();
-                        repaint();
+                        if (isHel) {
+                            isHel = false;
+                            this.helmet.gp.remove(this.helmet.jhelmet);
+                        } else {
+                            isFail = true;
+                            GameOver go = new GameOver();
+                            go.gameOver();
+                            repaint();
+                        }
                     }
                     // 尾巴碰撞————切断
                     for (int j = 0; j < knight.klenth; j++) {
