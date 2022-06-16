@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
@@ -17,6 +19,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public java.util.List<String> listSpike = new ArrayList<>();
     public java.util.List<String> listCoin = new ArrayList<>();
     public java.util.List<String> listToxic = new ArrayList<>();
+    public int myCoin;
     public int index;
     public boolean isSlow;
     public Knight knight;
@@ -69,6 +72,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         isStart = false;
         isWin = false;
         isHel = false;
+        File file = new File("coin/myCoin.txt");
+        myCoin = Integer.parseInt(Coin.txt2String(file));
+        System.out.println("金币"+myCoin);
         // 读取地图，并配置地图
         try {
             knight = new Knight(this, length, index);
@@ -452,6 +458,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             // 胜利判断
             if (knight.kx == winner.x && knight.ky == winner.y && !isWin) {
                 // 获得胜利
+                myCoin += (index + 1) * knight.klenth;
+                String path = "coin/myCoin.txt";
+                try {
+                    Coin.writeCoin(myCoin + "", path);
+                } catch (IOException E) {
+                    E.printStackTrace();
+                }
+                System.out.println("金币"+myCoin);
                 this.length = knight.klenth;
                 isWin = true;
                 winner.winner(knight.klenth);

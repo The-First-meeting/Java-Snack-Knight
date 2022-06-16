@@ -4,9 +4,7 @@ import ui.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +58,57 @@ public class Coin implements Runnable{
         br.close();
         return list;
     }
+    public static String txt2String(File file){
+        StringBuilder result = new StringBuilder();
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                result.append(s);
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+    public static void writeCoin(String str, String path) throws IOException {
+        //文件目录
+        File writefile;
+        BufferedWriter bw;
+        writefile = new File(path);
+        boolean append = false;  //  是否追加
+        if (writefile.exists() == false)   // 判断文件是否存在，不存在则生成
+        {
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        } else {        // 存在先删除，再创建
+            writefile.delete();
+            try {
+                writefile.createNewFile();
+                writefile = new File(path);
+            } catch (IOException e) {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+            }
+        }
+        try {
+            FileWriter fw = new FileWriter(writefile, append);
+            bw = new BufferedWriter(fw);
+            fw.write(str);
+            fw.flush();
+            fw.close();
 
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+    }
     @Override
     public void run() {
 
