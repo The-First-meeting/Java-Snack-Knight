@@ -1,0 +1,2 @@
+speed_num
+speed_num:是否拥有加速技能

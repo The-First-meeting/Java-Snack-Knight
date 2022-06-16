@@ -1,6 +1,8 @@
 package ui;
 
 import role.*;
+import skill.Speedup;
+import skill.Zaworld;
 import util.*;
 
 import javax.swing.*;
@@ -22,6 +24,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public int myCoin;
     public int index;
     public boolean isSlow;
+    public boolean is_have_speedup;
+    public Speedup speedup;
+    public boolean is_have_zaworld;
+    public Zaworld zaworld;
     public Knight knight;
     public Helmet helmet;
     public Winner winner;
@@ -75,11 +81,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         File file = new File("coin/myCoin.txt");
         myCoin = Integer.parseInt(Coin.txt2String(file));
         System.out.println("金币"+myCoin);
+        is_have_speedup = false;
+        is_have_zaworld = false;
         // 读取地图，并配置地图
         try {
             knight = new Knight(this, length, index);
             helmet = new Helmet(this);
             winner = new Winner(index);
+            speedup = new Speedup(this);
+            zaworld = new Zaworld(this);
             map = mp.readMap(index);
             listBullet = Bullet.readBullet(index);
             listArrow = Arrow.readArrow(index);
@@ -89,6 +99,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // 读取头盔数据
         if (this.helmet.hel_num > 0) {
             isHel = true;
             ImageIcon iconHelmet = new ImageIcon("image/greenbullet.png");
@@ -98,6 +109,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             this.helmet.hy = this.knight.ky;
             this.helmet.toward = this.knight.toward;
             this.helmet.gp.add(this.helmet.jhelmet, 0);
+        }
+        // 读取加速技能
+        if (this.speedup.speed_num > 0) {
+            is_have_speedup = true;
+        }
+        if (this.zaworld.zaworld_num > 0) {
+            is_have_zaworld = true;
         }
         bulletNum = listBullet.size();
         for (int i = 0; i < bulletNum; i++) {
@@ -124,11 +142,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             coin[i] = new Coin(this, values);
         }
         toxicNum = listToxic.size();
-        for(int i = 0; i < toxicNum; i++)
-        {
+        for (int i = 0; i < toxicNum; i++) {
             String str = listToxic.get(i);
             String[] values = str.split(",");
-            toxic[i] = new Toxic(this,values);
+            toxic[i] = new Toxic(this, values);
         }
         // 设置终点
         ImageIcon iconWinner = new ImageIcon("image/winner.png");
@@ -187,9 +204,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             coinThread[i] = new Thread(coin[i]);
             coinThread[i].start();
         }
-        //毒雾的线程
-        for(int i = 0; i < toxicNum; i++)
-        {
+        // 毒雾的线程
+        for (int i = 0; i < toxicNum; i++) {
             toxicThread[i] = new Thread(toxic[i]);
             toxicThread[i].start();
         }
@@ -259,26 +275,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             knight.isChangeToward = true;
             boolean isMatch = false;
-            //判断毒雾减速
-            for(int i = 0; i < this.toxicNum; i++)
-            {
-                if(this.toxic[i].tx == this.knight.kx && this.toxic[i].ty == this.knight.ky)
-                {
-                    if(!isSlow)
-                    {
+            // 判断毒雾减速
+            for (int i = 0; i < this.toxicNum; i++) {
+                if (this.toxic[i].tx == this.knight.kx && this.toxic[i].ty == this.knight.ky) {
+                    if (!isSlow) {
                         System.out.println("毒雾减速");
                         isSlow = true;
                         isMatch = true;
                         timer.setDelay(1000);
-                    }
-                    else
-                    {
+                    } else {
                         isMatch = true;
                     }
                 }
             }
-            if(!isMatch && isSlow)
-            {
+            if (!isMatch && isSlow) {
                 System.out.println("恢复速度");
                 isSlow = false;
                 timer.setDelay(300);
@@ -485,6 +495,44 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         int keyCode = e.getKeyCode();
         if (isStart && !isFail && !isWin) {
             if (knight.isChangeToward) {
+                // 技能
+                // 加速
+                if (keyCode == e.VK_SHIFT) {
+                    if (this.is_have_speedup) {
+                        this.is_have_speedup = false;
+                        System.out.println("使用加速技能");
+                        timer.setDelay(100);
+                    }
+                }
+
+                // 石化
+                if (keyCode == e.VK_CONTROL) {
+                    if (this.is_have_zaworld) {
+                        this.is_have_zaworld = false;
+                        System.out.println("使用时停技能");
+
+                        // 子弹的线程
+                        for (int i = 0; i < bulletNum; i++) {
+                            
+                            try {
+                                bulletThread[i].sleep(1000,0);
+                            } catch (InterruptedException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
+                        }
+                        // 地刺的线程
+                        for (int i = 0; i < spikeNum; i++) {
+                            try {
+                                spikeThread[i].sleep(1000,0);
+                            } catch (InterruptedException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
                 // 转向
                 if (keyCode == e.VK_LEFT) {
                     if (knight.toward != 4 && knight.hit.hitCheck(knight.kx, knight.ky, 3, this.map)) {
