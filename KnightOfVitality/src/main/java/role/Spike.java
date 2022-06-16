@@ -36,7 +36,7 @@ public class Spike implements Runnable{
         spikeOff.setBounds(this.sx,this.sy,25,25);
         spikeOn.setVisible(false);
         spikeOff.setVisible(true);
-        System.out.println("子弹坐标设置成功");
+        System.out.println("地刺坐标设置成功");
         // gf.getLayeredPane().add(bullet, Integer.valueOf(Integer.MAX_VALUE));
     }
     public static List<String> readSpike(int index) throws Exception {
