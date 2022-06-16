@@ -23,13 +23,13 @@ public class Spike implements Runnable{
         this.gp = gp;
         this.sx = Integer.parseInt(values[0]);
         this.sy = Integer.parseInt(values[1]);
-        // 设置子弹的初始位置
-        ImageIcon icon1 = new ImageIcon("image/spikeOff.png");
-        icon1.setImage(icon1.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
-        ImageIcon icon2 = new ImageIcon("image/spikeOn.png");
-        icon2.setImage(icon2.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
-        spikeOn.setIcon(icon2);
-        spikeOff.setIcon(icon1);
+        // 设置地刺的初始位置
+        ImageIcon spike1 = new ImageIcon("image/spikeOff.png");
+        spike1.setImage(spike1.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
+        ImageIcon spike2 = new ImageIcon("image/spikeOn.png");
+        spike2.setImage(spike2.getImage().getScaledInstance(25,25, Image.SCALE_DEFAULT));
+        spikeOn.setIcon(spike2);
+        spikeOff.setIcon(spike1);
         this.gp.add(spikeOff);
         this.gp.add(spikeOn);
         spikeOn.setBounds(this.sx, this.sy, 25, 25);

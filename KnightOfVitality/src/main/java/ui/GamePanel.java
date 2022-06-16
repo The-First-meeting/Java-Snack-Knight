@@ -16,7 +16,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public java.util.List<String> listArrow = new ArrayList<>();
     public java.util.List<String> listSpike = new ArrayList<>();
     public java.util.List<String> listCoin = new ArrayList<>();
+    public java.util.List<String> listToxic = new ArrayList<>();
     public int index;
+    public boolean isSlow;
     public Knight knight;
     public Winner winner;
     public int length = 2;
@@ -25,6 +27,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     Thread[] arrowThread = new Thread[100];
     Thread[] spikeThread = new Thread[100];
     Thread[] coinThread = new Thread[100];
+    Thread[] toxicThread = new Thread[100];
     boolean isStart;
     boolean isFail;
     boolean isWin;
@@ -32,10 +35,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     public Arrow[] arrow = new Arrow[100];
     public Spike[] spike = new Spike[100];
     public Coin[] coin = new Coin[100];
+    public Toxic[] toxic = new Toxic[100];
     public int spikeNum;
     public int bulletNum;
     public int arrowNum;
     public int coinNum;
+    public int toxicNum;
     Timer timer = new Timer(300, this);// 时钟信息
     public int[][] map = null;// 地图信息
     // 实例代码块中初始化地图资源的数据
@@ -51,6 +56,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         isStart = false;
         isFail = false;
         isWin = false;
+        isSlow = false;
         init();
         timer.start();// 时钟启动
     }
@@ -68,6 +74,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             listArrow = Arrow.readArrow(index);
             listSpike = Spike.readSpike(index);
             listCoin = Coin.readCoin(index);
+            listToxic = Toxic.readToxic(index);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,6 +101,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             String str = listCoin.get(i);
             String[] values = str.split(",");
             coin[i] = new Coin(this, values);
+        }
+        toxicNum = listToxic.size();
+        for(int i = 0; i < toxicNum; i++)
+        {
+            String str = listToxic.get(i);
+            String[] values = str.split(",");
+            toxic[i] = new Toxic(this,values);
         }
         // 设置终点
         ImageIcon iconWinner = new ImageIcon("image/winner.png");
@@ -147,6 +161,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         for (int i = 0; i < coinNum; i++) {
             coinThread[i] = new Thread(coin[i]);
             coinThread[i].start();
+        }
+        //毒雾的线程
+        for(int i = 0; i < toxicNum; i++)
+        {
+            toxicThread[i] = new Thread(toxic[i]);
+            toxicThread[i].start();
         }
     }
 
@@ -210,8 +230,31 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 knight.jTail[i].setBounds(knight.Tx[i], knight.Ty[i], 25, 25);
             }
             knight.isChangeToward = true;
-
-
+            boolean isMatch = false;
+            //判断毒雾减速
+            for(int i = 0; i < this.toxicNum; i++)
+            {
+                if(this.toxic[i].tx == this.knight.kx && this.toxic[i].ty == this.knight.ky)
+                {
+                    if(!isSlow)
+                    {
+                        System.out.println("毒雾减速");
+                        isSlow = true;
+                        isMatch = true;
+                        timer.setDelay(1000);
+                    }
+                    else
+                    {
+                        isMatch = true;
+                    }
+                }
+            }
+            if(!isMatch && isSlow)
+            {
+                System.out.println("恢复速度");
+                isSlow = false;
+                timer.setDelay(300);
+            }
             // 吃到金币
             for (int i = 0; i < this.coinNum; i++) {
                 // 头碰撞——吃到
@@ -229,7 +272,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     repaint();
                 }
             }
-
             // 与子弹碰撞
             for (int i = 0; i < this.bulletNum; i++) {
                 if (bullet[i].toward == 1)// 竖着
