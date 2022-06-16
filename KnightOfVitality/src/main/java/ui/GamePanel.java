@@ -68,7 +68,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             listArrow = Arrow.readArrow(index);
             listSpike = Spike.readSpike(index);
             listCoin = Coin.readCoin(index);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,6 +143,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             spikeThread[i] = new Thread(spike[i]);
             spikeThread[i].start();
         }
+        //金币的线程
         for (int i = 0; i < coinNum; i++) {
             coinThread[i] = new Thread(coin[i]);
             coinThread[i].start();
@@ -211,19 +211,23 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
             knight.isChangeToward = true;
 
+
             // 吃到金币
-
             for (int i = 0; i < this.coinNum; i++) {
-
                 // 头碰撞——吃到
-                if (this.coin[i].bx == this.knight.kx && Math.abs(this.coin[i].by - this.knight.ky) <= 24) {
-                    coin[i].stop();
+                if (this.coin[i].bx == this.knight.kx && this.coin[i].by == this.knight.ky) {
+                    System.out.println("吃到金币 "+this.knight.klenth);
+                    coinThread[i].stop();
+                    ImageIcon iconTail= new ImageIcon("image/knight.png");
+                    iconTail.setImage(iconTail.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
+                    this.knight.jTail[this.knight.klenth] = new JLabel(iconTail);
+                    this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
+                    this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
                     this.knight.gp.add(this.knight.jTail[knight.klenth]);
                     this.knight.klenth++;
-                    
+                    this.coin[i].gp.remove(this.coin[i].coin);
                     repaint();
                 }
-
             }
 
             // 与子弹碰撞
@@ -240,8 +244,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                     }
                     for (int j = 0; j < knight.klenth; j++) {
                         // 尾巴与子弹碰撞————切断
-                        if (this.bullet[i].bx == this.knight.Tx[j]
-                                && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 24) {
+                        if (this.bullet[i].bx == this.knight.Tx[j] && Math.abs(this.bullet[i].by - this.knight.Ty[j]) <= 24) {
                             for (int k = j; k < knight.klenth; k++) {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }

@@ -10,27 +10,26 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Coin implements Runnable {
+public class Coin implements Runnable{
     public static List<String> list = new ArrayList<>();
     public GamePanel gp;
     public int bx;
     public int by;
     public boolean flag = true;
-    JLabel coin;
+    public JLabel coin;
 
     public Coin(GamePanel gp, String[] values) throws Exception {
         this.gp = gp;
         this.bx = Integer.parseInt(values[0]);
         this.by = Integer.parseInt(values[1]);
 
-        // 设置子弹的初始位置
-        ImageIcon iconCoin = new ImageIcon("image/knight.png");
+        // 设置金币的初始位置
+        ImageIcon iconCoin = new ImageIcon("image/coin1.png");
         iconCoin.setImage(iconCoin.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
         coin = new JLabel(iconCoin);
         this.gp.add(coin);
         coin.setBounds(this.bx, this.by, 25, 25);
         System.out.println("金币坐标设置成功");
-        // gf.getLayeredPane().add(coin, Integer.valueOf(Integer.MAX_VALUE));
     }
 
     public void stop() {
@@ -64,17 +63,6 @@ public class Coin implements Runnable {
 
     @Override
     public void run() {
-        while (flag) {
 
-            // System.out.println(this.by);
-            coin.setBounds(this.bx, this.by, 25, 25);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
-
 }
