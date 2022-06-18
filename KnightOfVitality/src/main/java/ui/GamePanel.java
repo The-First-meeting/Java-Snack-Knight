@@ -1,6 +1,7 @@
 package ui;
 
 import role.*;
+import run.Run;
 import skill.Speedup;
 import skill.Zaworld;
 import util.*;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-public class GamePanel extends JPanel implements KeyListener, ActionListener {
+public class GamePanel extends JPanel implements KeyListener,ActionListener {
     public java.util.List<String> listBullet = new ArrayList<>();
     public java.util.List<String> listArrow = new ArrayList<>();
     public java.util.List<String> listSpike = new ArrayList<>();
@@ -517,13 +518,24 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         }
     }
 
+
     @Override
     public void keyTyped(KeyEvent e) {
+
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+   public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        if(keyCode == e.VK_E)
+        {
+            this.removeAll();
+            repaint();
+            Run.frame.remove(Run.frame.gp);
+            menu.seen=true;
+            Run.frame.repaint();
+            Run.frame.requestFocus();
+        }
         if (isStart && !isFail && !isWin) {
             if (knight.isChangeToward) {
                 // 技能
@@ -641,5 +653,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
     }
 }
