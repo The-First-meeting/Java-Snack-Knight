@@ -43,7 +43,7 @@ public class Bullet implements Runnable {
     public void begin(){this.flag = true;}
     public static List<String> readBullet(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("bullet/bullet1.txt");
+        FileInputStream fis;
         if(index == 0)
         {
             fis = new FileInputStream("bullet/bullet1.txt");
@@ -51,6 +51,10 @@ public class Bullet implements Runnable {
         else if(index == 1)
         {
             fis = new FileInputStream("bullet/bullet2.txt");
+        }
+        else
+        {
+            fis = new FileInputStream("bullet/bullet1.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

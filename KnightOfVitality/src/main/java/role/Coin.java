@@ -35,13 +35,16 @@ public class Coin implements Runnable{
 
     public static List<String> readCoin(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("coin/coin1.txt");
+        FileInputStream fis;
+
         if (index == 0) {
             fis = new FileInputStream("coin/coin1.txt");
         } else if (index == 1) {
-            fis = new FileInputStream("coin/coin2.txt");
+             fis = new FileInputStream("coin/coin2.txt");
         }else if (index == 2) {
-            fis = new FileInputStream("coin/coin3.txt");
+             fis = new FileInputStream("coin/coin3.txt");
+        } else {
+             fis = new FileInputStream("coin/coin1.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

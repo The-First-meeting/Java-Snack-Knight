@@ -51,7 +51,7 @@ public class Toxic implements Runnable{
     }
     public static List<String> readToxic(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("toxic/toxic1.txt");
+        FileInputStream fis ;
         if(index == 0)
         {
             fis = new FileInputStream("toxic/toxic1.txt");
@@ -59,6 +59,10 @@ public class Toxic implements Runnable{
         else if(index == 1)
         {
             fis = new FileInputStream("toxic/toxic2.txt");
+        }
+        else
+        {
+            fis = new FileInputStream("toxic/toxic1.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

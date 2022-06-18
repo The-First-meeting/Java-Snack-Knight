@@ -1,35 +1,45 @@
 package ui;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileInputStream;
+
 import run.*;
-public class menu extends JFrame implements KeyListener, ActionListener {
+import util.BGMPlayer;
+
+public class menu extends JFrame implements KeyListener {
     static boolean seen;
+    Shop sp;
     GamePanel gp;
-    shop sp;
+
     int index = 0;
     public menu() throws Exception {
+        BGMPlayer bgm = new BGMPlayer();
+        Thread bgmThread = new Thread(bgm);
+        bgmThread.start();
         seen = true;
         this.setTitle("yqqs与sbdyy！");
         this.setBounds(300,100,900,720);
         this.setResizable(false);
         this.addKeyListener(this); //添加键盘监听器
-
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);//关闭组件同时停止运行代码
         this.setVisible(true);                                       //显示组件
     }
-
     @Override
     public void paint(Graphics g)
     {
         super.paint(g);
         if(seen)
         {
-            Run.isFinish = false;
             g.setFont(new Font("微软雅黑",Font.BOLD,40));
             if(index == 0)
             {
@@ -61,14 +71,8 @@ public class menu extends JFrame implements KeyListener, ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
-    @Override
     public void keyTyped(KeyEvent e) {
-
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -103,9 +107,26 @@ public class menu extends JFrame implements KeyListener, ActionListener {
             }
             else if(index == 1)
             {
-                this.add(sp);
-                sp.requestFocus();
-                this.removeKeyListener(this);
+                try {
+                    sp = new Shop();
+                    this.add(sp);
+                    sp.requestFocus();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                seen = false;
+                repaint();
+                this.setVisible(true);
+            }
+            else if(index == 2)
+            {
+                try {
+                    gp = new GamePanel();
+                    this.add(gp);
+                    gp.requestFocus();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
                 seen = false;
                 repaint();
             }

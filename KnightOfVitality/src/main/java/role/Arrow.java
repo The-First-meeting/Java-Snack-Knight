@@ -61,7 +61,7 @@ public class Arrow implements Runnable{
     }
     public static List<String> readArrow(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("arrow/arrow1.txt");
+        FileInputStream fis ;
         if(index == 0)
         {
             fis = new FileInputStream("arrow/arrow1.txt");
@@ -73,6 +73,10 @@ public class Arrow implements Runnable{
         else if(index == 2)
         {
             fis = new FileInputStream("arrow/arrow3.txt");
+        }
+        else
+        {
+            fis = new FileInputStream("arrow/arrow1.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

@@ -15,10 +15,7 @@ public class Hit {
                     x=x/25;//5
                     y=y/25;//1
                     //System.out.println("x="+x+"y="+y);
-                    if (y==0){
-                        return false;
-                    }
-                    else if(map[y-1][x]==0){
+                     if(map[y-1][x]==0){
                         return false;
                     }
                     else return true;

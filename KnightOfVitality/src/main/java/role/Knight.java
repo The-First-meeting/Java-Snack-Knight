@@ -77,7 +77,7 @@ public class Knight implements Runnable{
 
     public void readKnight(int index) throws Exception{
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("knight/knight1.txt");
+        FileInputStream fis ;
         if(index == 0)
         {
             fis = new FileInputStream("knight/knight1.txt");
@@ -89,6 +89,10 @@ public class Knight implements Runnable{
         else if(index == 2)
         {
             fis = new FileInputStream("knight/knight3.txt");
+        }
+        else
+        {
+            fis = new FileInputStream("knight/knight1.txt");
         }
 
 

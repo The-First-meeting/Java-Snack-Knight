@@ -41,7 +41,7 @@ public class Spike implements Runnable{
     }
     public static List<String> readSpike(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("spike/spike1.txt");
+        FileInputStream fis;
         if(index == 0)
         {
             fis = new FileInputStream("spike/spike1.txt");
@@ -49,6 +49,10 @@ public class Spike implements Runnable{
         else if(index == 1)
         {
             fis = new FileInputStream("spike/spike2.txt");
+        }
+        else
+        {
+            fis  = new FileInputStream("spike/spike1.txt");
         }
 
         InputStreamReader isr = new InputStreamReader(fis);

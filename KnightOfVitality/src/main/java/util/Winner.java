@@ -14,7 +14,7 @@ public class Winner {
 
     public Winner(int index) throws Exception {
         // 构造文件输入流
-        FileInputStream fis = new FileInputStream("winner/winner1.txt");
+        FileInputStream fis;
         if(index == 0)
         {
             fis = new FileInputStream("winner/winner1.txt");
@@ -26,6 +26,10 @@ public class Winner {
         else if(index == 2)
         {
             fis = new FileInputStream("winner/winner3.txt");
+        }
+        else
+        {
+            fis  = new FileInputStream("winner/winner1.txt");
         }
 
 

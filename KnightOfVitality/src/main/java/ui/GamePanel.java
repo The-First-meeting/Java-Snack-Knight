@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements KeyListener,ActionListener {
+    public soundPlayer type = new soundPlayer("music/点击.wav");
+
     public java.util.List<String> listBullet = new ArrayList<>();
     public java.util.List<String> listArrow = new ArrayList<>();
     public java.util.List<String> listSpike = new ArrayList<>();
@@ -527,7 +529,8 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
     @Override
    public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if(keyCode == e.VK_E)
+        new Thread(type).start();
+        if(keyCode == e.VK_ESCAPE)
         {
             this.removeAll();
             repaint();
