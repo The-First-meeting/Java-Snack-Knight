@@ -19,7 +19,7 @@ import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements KeyListener,ActionListener {
     public soundPlayer type = new soundPlayer("music/点击.wav");
-
+    public soundPlayer eat = new soundPlayer("music/吃金币.wav");
     public java.util.List<String> listBullet = new ArrayList<>();
     public java.util.List<String> listArrow = new ArrayList<>();
     public java.util.List<String> listSpike = new ArrayList<>();
@@ -296,13 +296,14 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
             for (int i = 0; i < this.coinNum; i++) {
                 // 头碰撞——吃到
                 if (this.coin[i].bx == this.knight.kx && this.coin[i].by == this.knight.ky) {
+                    new Thread(eat).start();
                     System.out.println("吃到金币 " + this.knight.klenth);
                     ImageIcon iconTail = new ImageIcon("image/knight.png");
                     iconTail.setImage(iconTail.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
                     this.knight.jTail[this.knight.klenth] = new JLabel(iconTail);
                     this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
                     this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
-                    this.knight.gp.add(this.knight.jTail[knight.klenth], 1);
+                    this.knight.gp.add(this.knight.jTail[knight.klenth],0);
                     this.knight.klenth++;
                     this.coin[i].gp.remove(this.coin[i].coin);
                     this.coin[i].bx = 0;
