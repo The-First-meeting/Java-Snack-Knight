@@ -18,8 +18,14 @@ import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements KeyListener,ActionListener {
-    public soundPlayer type = new soundPlayer("music/点击.wav");
-    public soundPlayer eat = new soundPlayer("music/吃金币.wav");
+    public soundPlayer tap = new soundPlayer("music/点击.wav");
+    public soundPlayer eatcoin = new soundPlayer("music/吃金币.wav");
+    public soundPlayer nextlevel = new soundPlayer("music/传送.wav");
+    public soundPlayer speedoo = new soundPlayer("music/加速.wav");
+    public soundPlayer ding = new soundPlayer("music/时钟.wav");
+    public soundPlayer beaten = new soundPlayer("music/受击.wav");
+    public soundPlayer failll = new soundPlayer("music/游戏失败.wav");
+
     public java.util.List<String> listBullet = new ArrayList<>();
     public java.util.List<String> listArrow = new ArrayList<>();
     public java.util.List<String> listSpike = new ArrayList<>();
@@ -296,13 +302,20 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
             for (int i = 0; i < this.coinNum; i++) {
                 // 头碰撞——吃到
                 if (this.coin[i].bx == this.knight.kx && this.coin[i].by == this.knight.ky) {
-                    new Thread(eat).start();
+                    new Thread(eatcoin).start();
+
                     System.out.println("吃到金币 " + this.knight.klenth);
                     ImageIcon iconTail = new ImageIcon("image/knight.png");
                     iconTail.setImage(iconTail.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
                     this.knight.jTail[this.knight.klenth] = new JLabel(iconTail);
-                    this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
-                    this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
+                    if(this.knight.klenth>0) {
+                        this.knight.Tx[this.knight.klenth] = this.knight.Tx[this.knight.klenth - 1];
+                        this.knight.Ty[this.knight.klenth] = this.knight.Ty[this.knight.klenth - 1];
+                    }
+                    else {
+                        this.knight.Tx[this.knight.klenth] = this.knight.kx;
+                        this.knight.Ty[this.knight.klenth] = this.knight.ky;
+                    }
                     this.knight.gp.add(this.knight.jTail[knight.klenth],0);
                     this.knight.klenth++;
                     this.coin[i].gp.remove(this.coin[i].coin);
@@ -317,6 +330,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.bullet[i].bx == this.knight.kx && Math.abs(this.bullet[i].by - this.knight.ky) <= 24) {
+                        new Thread(beaten).start();
                         if (isHel) {
                             knight.helmet.hel_num--;
                             isHel = false;
@@ -329,6 +343,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             bullet[i].stop();
+                            new Thread(failll).start();
                             isFail = true;
                             GameOver go = new GameOver();
                             go.gameOver();
@@ -343,6 +358,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
                             this.knight.klenth = j;
+                            new Thread(beaten).start();
                             repaint();
                         }
                     }
@@ -350,6 +366,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.bullet[i].by == this.knight.ky && Math.abs(this.bullet[i].bx - this.knight.kx) <= 24) {
+                        new Thread(beaten).start();
                         if (isHel) {
                             knight.helmet.hel_num--;
                             isHel = false;
@@ -362,6 +379,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
                             bullet[i].stop();
+                            new Thread(failll).start();
                             isFail = true;
                             GameOver go = new GameOver();
                             go.gameOver();
@@ -376,6 +394,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
                             this.knight.klenth = j;
+                            new Thread(beaten).start();
                             repaint();
                         }
                     }
@@ -393,6 +412,8 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.arrow[i].ax == this.knight.kx && Math.abs(this.arrow[i].ay - this.knight.ky) <= 24) {
+                        new Thread(beaten).start();
+
                         if (isHel) {
                             knight.helmet.hel_num--;
                             isHel = false;
@@ -404,6 +425,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             }
                             this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
+                            new Thread(failll).start();
                             isFail = true;
                             GameOver go = new GameOver();
                             go.gameOver();
@@ -411,6 +433,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                         }
                     }
                     for (int j = 0; j < knight.klenth; j++) {
+
                         // 尾巴与弩箭碰撞————切断
                         if (this.arrow[i].ax == this.knight.Tx[j]
                                 && Math.abs(this.arrow[i].ay - this.knight.Ty[j]) <= 24) {
@@ -418,12 +441,14 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
                             this.knight.klenth = j;
+                            new Thread(beaten).start();
                             repaint();
                         }
                     }
                 } else// 横着
                 {
                     if (this.arrow[i].ay == this.knight.ky && Math.abs(this.arrow[i].ax - this.knight.kx) <= 24) {
+                        new Thread(beaten).start();
                         if (isHel) {
                             knight.helmet.hel_num--;
                             isHel = false;
@@ -435,6 +460,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             }
                             this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
+                            new Thread(failll).start();
                             isFail = true;
                             GameOver go = new GameOver();
                             go.gameOver();
@@ -449,6 +475,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
                             this.knight.klenth = j;
+                            new Thread(beaten).start();
                             repaint();
                         }
                     }
@@ -460,6 +487,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 {
                     // 头碰撞——失败
                     if (this.knight.kx == spike[i].sx && this.knight.ky == spike[i].sy) {
+                        new Thread(beaten).start();
                         if (isHel) {
                             knight.helmet.hel_num--;
                             isHel = false;
@@ -471,6 +499,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             }
                             this.knight.helmet.gp.remove(this.knight.jhelmet);
                         } else {
+                            new Thread(failll).start();
                             isFail = true;
                             GameOver go = new GameOver();
                             go.gameOver();
@@ -484,6 +513,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                                 this.knight.gp.remove(this.knight.jTail[k]);
                             }
                             this.knight.klenth = j;
+                            new Thread(beaten).start();
                             repaint();
                         }
                     }
@@ -493,6 +523,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 // 咬到尾巴————失败
                 if (this.knight.Tx[i] == this.knight.kx && this.knight.Ty[i] == this.knight.ky && knight.bool) {
                     System.out.println(this.knight.Ty[i] + "====" + this.knight.ky);
+                    new Thread(failll).start();
                     isFail = true;
                     GameOver go = new GameOver();
                     go.gameOver();
@@ -503,6 +534,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
             // 胜利判断
             if (knight.kx == winner.x && knight.ky == winner.y && !isWin) {
                 // 获得胜利
+                new Thread(nextlevel).start();
                 myCoin += (index + 1) * knight.klenth;
                 String path = "coin/myCoin.txt";
                 try {
@@ -530,7 +562,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
     @Override
    public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        new Thread(type).start();
+        new Thread(tap).start();
         if(keyCode == e.VK_ESCAPE)
         {
             this.removeAll();
@@ -546,6 +578,8 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 // 加速
                 if (keyCode == e.VK_SHIFT) {
                     if (this.is_have_speedup) {
+                        new Thread(speedoo).start();
+
                         System.out.println("使用加速技能");
                         timer.setDelay(100);
                         java.util.Timer timerHere = new java.util.Timer();
@@ -553,7 +587,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                             public void run(){
                                 timer.setDelay(300);
                             }
-                        },500);
+                        },800);
                         is_have_speedup = false;
                         timerHere.schedule(new TimerTask() {
                             public void run() {
@@ -566,6 +600,7 @@ public class GamePanel extends JPanel implements KeyListener,ActionListener {
                 // 石化
                 if (keyCode == e.VK_CONTROL) {
                     if (this.is_have_zaworld) {
+                        new Thread(ding).start();
                         this.is_have_zaworld = false;
                         System.out.println("使用时停技能");
 

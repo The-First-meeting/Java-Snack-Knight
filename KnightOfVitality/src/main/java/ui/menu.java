@@ -15,8 +15,10 @@ import java.io.FileInputStream;
 
 import run.*;
 import util.BGMPlayer;
+import util.soundPlayer;
 
 public class menu extends JFrame implements KeyListener {
+    public soundPlayer tap = new soundPlayer("music/点击.wav");
     static boolean seen;
     Shop sp;
     GamePanel gp;
@@ -76,6 +78,7 @@ public class menu extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        new Thread(tap).start();
         if(keyCode == e.VK_DOWN)
         {
             if(index < 2){
